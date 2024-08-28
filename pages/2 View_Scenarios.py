@@ -21,7 +21,7 @@ try:
 
     with st.sidebar:
 
-        SCENARIO = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').select('SCENARIO').distinct()
+        SCENARIO = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').select('SCENARIO').distinct()
     
     
         SELECT_SCENARIO = st.selectbox('Choose Scenario: ', SCENARIO)
@@ -31,7 +31,7 @@ try:
         clear = st.button('Clear All Scenarios')
 
         if clear:
-            session.sql(f'DROP TABLE {st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').collect()
+            session.sql(f'DROP TABLE DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').collect()
 
 
 
