@@ -50,13 +50,15 @@ You can import this SQL script and run all within Snow sight.
 
 [home.py](Home.py)
 
+![alt text](image-3.png)
+
 Download the following pages and add to a new directory called pages
 
-[pages](/Users/boconnor/government_hackathon/pages)
+[pages](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/pages)
 
 Download the following images and add to a new directory called images
 
-[Images](/Users/boconnor/government_hackathon/images)
+[Images](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/images)
 
 
 #### Viewing the data with a notebook
