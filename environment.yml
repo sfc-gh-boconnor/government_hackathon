@@ -7,3 +7,4 @@ dependencies:
   - python=
   - snowflake-snowpark-python=
   - streamlit=
+  - streamlit_extras=

@@ -73,7 +73,7 @@ Download the following file and add it to the home directory
 
 [enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
 
-
+![alt text](image-8.png)
 
 - In the Projects area, click on Streamlit
 
@@ -81,6 +81,10 @@ Download the following file and add it to the home directory
 ![Image](image-7.png)
 
 Click on the new app and wait for it to start.
+
+
+
+>**FACT**  You can create a packaged app which have all the dependent SQL, python packages, images and steamlits which are called 'Native apps'.  This makes a fully functioning app easy to distribute.
 
 #### Viewing the data with a notebook
 
