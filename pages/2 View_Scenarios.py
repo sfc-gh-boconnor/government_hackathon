@@ -37,7 +37,7 @@ try:
 
     
 
-        data = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
+        data = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
         st.markdown(f'''Start Date: {data.select('Options: Start Date').distinct().to_pandas()['Options: Start Date'].iloc[0]}''')
         st.markdown(f'''Start Date: {data.select('Options: Start Date').distinct().to_pandas()['Options: Start Date'].iloc[0]}''')
         st.markdown(f'''Description: {data.select('Scenario Description').distinct().to_pandas()['Scenario Description'].iloc[0]}''')
@@ -65,7 +65,7 @@ try:
 
     @st.cache_data
     def geos2(SELECT_SCENARIO):
-        data = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
+        data = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
         geos = session.table(f'{S.shareddata}.DATA."Postal Out Code Geometries"')
         return geos.join(data,on=geos['"Name"']==data['"Postcode Area"'],lsuffix='L').to_pandas()
         
@@ -98,7 +98,7 @@ try:
 
     @st.cache_data
     def data_for_charts(SELECT_SCENARIO):
-        data = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
+        data = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
         return data.to_pandas()
     
     with col1:

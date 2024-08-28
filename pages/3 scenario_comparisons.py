@@ -33,27 +33,27 @@ try:
 
     @st.cache_data
     def geos2(SELECT_SCENARIO):
-        data = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
+        data = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
         geos = session.table(f'{S.shareddata}.DATA."Postal Out Code Geometries"')
         return geos.join(data,on=geos['"Name"']==data['"Postcode Area"'],lsuffix='L').to_pandas()
 
     @st.cache_data
     def datapd(SELECT_SCENARIO):
-        return session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO).to_pandas()
+        return session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO).to_pandas()
 
     @st.cache_data
     def data_for_charts(SELECT_SCENARIO):
-        data = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
+        data = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
         return data.to_pandas()
 
     @st.cache_data
     def data_for_top_5(SELECT_SCENARIO,measure):
-        data = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)\
+        data = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)\
         .sort(F.col(f'"{measure}"').desc()).limit(5)
         return data.to_pandas()
 
     def datasp(SELECT_SCENARIO):
-        return session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
+        return session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').filter(F.col('SCENARIO')==SELECT_SCENARIO)
 
     def viewmap(SELECT_SCENARIO):
         geos = session.table(f'{S.shareddata}.DATA."Postal Out Code Geometries"')
@@ -87,7 +87,7 @@ try:
     
     with st.sidebar:
 
-        SCENARIO = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').select('SCENARIO').distinct().to_pandas()
+        SCENARIO = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO').select('SCENARIO').distinct().to_pandas()
     
         with st.form('Scenarios'):
             

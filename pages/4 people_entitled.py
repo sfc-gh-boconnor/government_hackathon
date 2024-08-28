@@ -37,7 +37,7 @@ with col1:
 st.markdown('# DETAILS OF AFFECTED PEOPLE FOR SCENARIO')
 
 
-SCENARIOS = session.table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO')
+SCENARIOS = session.table(f'DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO')
 SCENARIO = SCENARIOS.select('SCENARIO').distinct()
 Postcode = SCENARIOS.select('"Postcode Area"').distinct()
 

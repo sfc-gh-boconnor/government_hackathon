@@ -219,7 +219,7 @@ if submitted:
     entitled_payments_sav = entitled_payments_sav.with_column('Options: Weather Measure',F.lit(S.temperature_measure))
 
 
-    session.sql(f'''CREATE TABLE IF NOT EXISTS "{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO" (
+    session.sql(f'''CREATE TABLE IF NOT EXISTS "POLICY_CHANGE_SIMULATOR_STREAMLIT.DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO" (
 	"Postcode Area" VARCHAR(16777216),
 	"Adults" NUMBER(38,0),
 	"Number of Households" NUMBER(38,0) NOT NULL,
@@ -241,13 +241,13 @@ if submitted:
 	"Options: Average X Days" NUMBER(38,0) NOT NULL,
 	"Options: Weather Measure" VARCHAR(500) NOT NULL
 )''').collect()
-    entitled_payments_sav.write.save_as_table(f'{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO',mode="append")
+    entitled_payments_sav.write.save_as_table(f'POLICY_CHANGE_SIMULATOR_STREAMLIT.DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO',mode="append")
 
 
     #st.dataframe(entitled_payments)
     
 
-    S.scenario = session.table(f'''{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO''')\
+    S.scenario = session.table(f'''POLICY_CHANGE_SIMULATOR_STREAMLIT.DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO''')\
             .agg(F.max('SCENARIO').alias('SCENARIO')).to_pandas().SCENARIO.iloc[0]
 
     st.markdown(f'#### Your Scenario has saved as version number {S.scenario}')
