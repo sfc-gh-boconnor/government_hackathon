@@ -77,12 +77,23 @@ Download the following file and add it to the home directory
 
 - In the Projects area, click on Streamlit
 
-- You Should se a new streamlit app appear called **Policy Change Simulator**
+- You should ses a new streamlit app appear called **Policy Change Simulator**
+
 ![Image](image-7.png)
 
-Click on the new app and wait for it to start.
+Click on the **new app** and wait for it to start.
 
 
+##### Create a Scenario
+Leave the settings 'as-is' in the sidebar, and give the scenario a name
+
+Press Save Scenario for more details
+
+![alt text](image-9.png)
+
+You will see summary metrics based on live calculation - all by using shared datasets.
+
+![alt text](image-10.png)
 
 >**FACT**  You can create a packaged app which have all the dependent SQL, python packages, images and steamlits which are called 'Native apps'.  This makes a fully functioning app easy to distribute.
 

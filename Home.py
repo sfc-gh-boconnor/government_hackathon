@@ -73,7 +73,7 @@ with st.sidebar:
                                                 ])
         S.description = st.text_input('Scenario Description:')
         try:
-            S.scenario = session.table(f'''{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO''')\
+            S.scenario = session.table(f'''DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO''')\
             .agg(F.max('SCENARIO').alias('SCENARIO')).to_pandas().SCENARIO.iloc[0]+1
             
         except:
@@ -219,7 +219,7 @@ if submitted:
     entitled_payments_sav = entitled_payments_sav.with_column('Options: Weather Measure',F.lit(S.temperature_measure))
 
 
-    session.sql(f'''CREATE TABLE IF NOT EXISTS "POLICY_CHANGE_SIMULATOR_STREAMLIT.DATA.{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO" (
+    session.sql(f'''CREATE TABLE IF NOT EXISTS DATA."{st.experimental_user.user_name}_COLD_WEATHER_PAYMENT_SCENARIO" (
 	"Postcode Area" VARCHAR(16777216),
 	"Adults" NUMBER(38,0),
 	"Number of Households" NUMBER(38,0) NOT NULL,
