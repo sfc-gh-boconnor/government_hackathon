@@ -26,10 +26,11 @@ Today we will go though a working example of how data sharing can allow you to m
 
 ##### Go to the Private Share area to access the private datasets that you will need.  The private share should now be available, if not - let us know!
 
-#### Viewing the data with a notebook
+Once you press **Get** to get the data, you will see a new database appear in your trial account.  It should look like this:
+
+![alt text](image-1.png)
 
 
-TBA   .... this will be a notebook which will leverage the data in the private share.
 
 #### Creating the Streamlit app.
 
@@ -40,7 +41,12 @@ Today we will manually add the files needed to run the app using the snowflake U
 
 You can import this SQL script and run all within Snow sight.
 
-Go to the created stage and add the following file:
+
+- Open up the **POLICY_CHANGE_SIMULATOR_STREAMLIT** database and navigate to the streamlit stage
+
+![alt text](image-2.png)
+
+- Download following file and import it to the the stage
 
 [home.py](Home.py)
 
@@ -52,6 +58,12 @@ Download the following images and add to a new directory called images
 
 [Images](/Users/boconnor/government_hackathon/images)
 
+
+#### Viewing the data with a notebook
+
+
+
+TBA   .... this will be a notebook which will leverage the data in the private share.
 
 #### Creating Your own private listing
 
