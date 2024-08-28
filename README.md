@@ -54,12 +54,33 @@ You can import this SQL script and run all within Snow sight.
 
 Download the following pages and add to a new directory called pages
 
+![alt text](image-5.png)
+
+
 [pages](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/pages)
+
+![alt text](image-4.png)
+
+
 
 Download the following images and add to a new directory called images
 
 [Images](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/images)
 
+![Images](image-6.png)
+
+Download the following file and add it to the home directory
+
+[enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
+
+
+
+- In the Projects area, click on Streamlit
+
+- You Should se a new streamlit app appear called **Policy Change Simulator**
+![Image](image-7.png)
+
+Click on the new app and wait for it to start.
 
 #### Viewing the data with a notebook
 

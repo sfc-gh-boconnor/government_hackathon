@@ -2,8 +2,8 @@ name: app_environment
 channels:
   - snowflake
 dependencies:
-  - geopandas=0.12.2
-  - matplotlib=3.7.2
-  - python=3.8.*
+  - geopandas=
+  - matplotlib=
+  - python=
   - snowflake-snowpark-python=
   - streamlit=
