@@ -13,57 +13,86 @@ These are the the key aspects in order to ensure you will make the most of the h
 
 
 
-##### Set up a free trial account in AWS London
+## Set up a free trial account in AWS London
 
-https://www.snowflake.com/en/
+- Navigate to the following website and start a free trial of snowflake
 
-![alt text](image-32.png)
+    https://www.snowflake.com/en/
+
+    ![alt text](image-32.png)
+
+- When you get to the cloud options, select **Enterprise**, **AWS** and **London**.  Using the same region and cloud will make the sharing sections of the data quicker.
 
 
-![alt text](image-33.png)
+    ![alt text](image-33.png)
 
 - Select Enterprise, AWS and London
 - Wait for an email and then use the link to log in.
 
-##### Log into Snowflake
+
+## Log into Snowflake
+
+Welcome to Snowflake.  Before we can continue with the lab, we will be sharing you a private data share.  in order to do this, we will need the account identifier of you newly created account.
+
+- Copy your account identifier.   You will be able to access this by clicking on your name at the bottom left hand of the screen 
+
+    ![alt text](image-34.png)
 
 
-Copy your account identifier.  This lab you will be leveraging a private share which I will be supplying
+- Open up the following google form and supply your account identifier with your full name and organisation
 
-![alt text](image.png)
-
-Open up the following google form and supply your account identifier with your full name and organisation
-
-https://forms.gle/JXF4zSKZP6X26Unr6
-
-
+    https://forms.gle/JXF4zSKZP6X26Unr6
 
 
 I will share all the datasets during your overview session.
 
-> Enjoy your overview session
+Enjoy your overview session
 
-### HANDS ON LAB
+## Setup the Streamlit app
 
-Today we will go though a working example of how data sharing can allow you to make better decisions.  We will be going through how to create a policy simulator in order to estimate the impact of changing the cold weather payment policy.
+Today we will go though a working example of how data sharing can allow you to make better decisions.  We will be going through how to create a policy simulator in order to estimate the impact of changing the cold weather payment policy.  The application in its entirety could have been fully packaged as a **native app**.  However, for this example, you will be manually loading the components just incase you would like to reuse any of the source code on day 2.
 
-##### Go to the Private Share area to access the private datasets that you will need.  The private share should now be available, if not - let us know!
 
-Once you press **Get** to get the data, you will see a new database appear in your trial account.  It should look like this:
+
+-  Go to the Private Share area to access the private datasets that you will need.  The private share should now be available, if not - let us know!
+
+    Once you press **Get** to get the data, you will see a new database appear in your trial account.  It should look like this:
 
 ![alt text](image-1.png)
 
+-   Open up a new worksheet and run the following SQL code.
+
+```sql
+
+--------initial setup for simulator -------------
 
 
-#### Creating the Streamlit app.
+CREATE OR REPLACE DATABASE POLICY_CHANGE_SIMULATOR_STREAMLIT;
+
+CREATE OR REPLACE WAREHOUSE POLICY_CHANGE_SIMULATOR_WH WITH WAREHOUSE_SIZE='SMALL';
+
+CREATE OR REPLACE SCHEMA DATA;
+
+CREATE OR REPLACE SCHEMA NOTEBOOKS;
+
+CREATE OR REPLACE SCHEMA STREAMLITS;
+
+create or replace stage streamlit_stage DIRECTORY = (ENABLE = TRUE);
 
 
-Run the SQL Script [run sql setup](sql_setup.sql)
 
-Today we will manually add the files needed to run the app using the snowflake UI.  however, in practices it is much easier to leverage Visual Studio Code as demonstrated today.  You may wish to leverage VSCode in the second part of the hackathon.
+create or replace stage streamlit_stage DIRECTORY = (ENABLE = TRUE);
 
-You can import this SQL script and run all within Snow sight.
+CREATE or replace STREAMLIT "Policy Change Simulator"
+ROOT_LOCATION = '@policy_change_simulator_streamlit.streamlits.streamlit_stage'
+MAIN_FILE = '/Home.py'
+QUERY_WAREHOUSE = POLICY_CHANGE_SIMULATOR_WH;
 
+```
+
+Today we will manually add the files needed to run the app using the snowflake UI.  however, in practices it is much easier to leverage **Visual Studio Code** as demonstrated today.  You may wish to leverage Visual Studio Code in the second part of the hackathon.
+
+- Once you have run the code, new objects would have been created
 
 - Open up the **POLICY_CHANGE_SIMULATOR_STREAMLIT** database and navigate to the streamlit stage
 
