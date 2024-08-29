@@ -497,8 +497,8 @@ Add a new python cell to only retrieve data for each postcode area.
 
 ```python
 
-meter_data = meter_data.filter(F.col('POSTCODE')=='All postcodes').drop('POSTCODE')
-meter_data
+meter_data_pcd_area = meter_data.filter(F.col('POSTCODE')=='All postcodes').drop('POSTCODE')
+meter_data_pcd_area
 
 ```
 
@@ -506,7 +506,6 @@ meter_data
 Create another cell which shows the detail version.
 
 ```python
-
 meter_data_pcd = meter_data.filter(F.col('POSTCODE')!='All postcodes')
 meter_data_pcd.sample(0.05)
 
@@ -515,12 +514,12 @@ meter_data_pcd.sample(0.05)
 
 Now as a data provider, I would like to share this data in this format to other organisations.  For this we need to create secure views of the data (or tables/dynamic tables)
 
-Add a new cell to convert these dataframes to views
+Add a new cell to convert these dataframes to views. **IMPORTANT** replace the word Electric with **Gas** on both view names if you have ingested gas data.
 
 ```python
 
-meter_data_pcd.create_or_replace_view('"Electric Meter by Postcode"')
-meter_data_pcd_area.create_or_replace_view('"Electric Meter by Postcode"')
+meter_data_pcd.create_or_replace_view('DATA."Electric Meter by Postcode"')
+meter_data_pcd_area.create_or_replace_view('DATA."Electric Meter by Postcode Area"')
 
 
 ```
@@ -585,4 +584,50 @@ Check that the other person can get the data.
 They need to go to **Private Sharing** and the new dataset should appear.
 
 
-Download the data as before.
+Download the data as before.  If your trial account is in the same region/cloud the data will be instant.  If its in a different region, it will take 10 minutes.
+
+
+
+![alt text](image-29.png)
+
+
+So you should now have access to both gas and electricity data.  One local and one from a share.
+
+If you haven't already done so, get the other energy listing data from the private shares.
+
+Go back to the original notebook and this time add a SQL cell.
+
+
+```sql
+
+CREATE OR REPLACE VIEW "Energy by Postcode Area"
+
+as
+SELECT *, 'ELECTRIC' as "Energy Type" FROM ENERGY_USAGE.DATA."Electric Meter by Postcode Area"
+
+UNION 
+
+SELECT *, 'GAS' as "Energy Type" FROM DATA."Gas Meter by Postcode Area"
+
+```
+Add a python cell to load the data into a dataframe
+
+```python
+
+total_energy = session.table('"Energy by Postcode Area"')
+
+total_energy;
+
+```
+
+Create a basic dataframe which views both datasets
+
+```python
+
+
+total_energy.group_by('"Energy Type"').agg(F.sum('NUM_METERS'),
+                                          F.mean('MEAN_CONS_KWH'),
+                                          F.median('MEDIAN_CONS_KWH'))
+
+
+```
