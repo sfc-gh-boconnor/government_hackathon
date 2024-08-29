@@ -1,6 +1,6 @@
 # GOVERNMENT HACKATHON HANDS ON LAB DAY 1
 
-Thank you for attending day one of the government. Today, we will be guiding you though snowflake which will help you get 'armed' for day 2. At the end of the day you will experience the following
+Thank you for attending day one of the Government Hackathon. Today, we will be guiding you though snowflake which will help you get 'armed' for day 2. At the end of the day you will experience the following
 
 - Creating a streamlit app based on shared data
 - Analysing data in a Snowflake Notebook using both SQL and Python
@@ -45,7 +45,6 @@ Welcome to Snowflake.  Before we can continue with the lab, we will be sharing y
 
 
 I will share all the datasets during your overview session.
-
 Enjoy your overview session
 
 ## 1 Create a Streamlit app
