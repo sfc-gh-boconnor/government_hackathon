@@ -1,6 +1,29 @@
-#### GOVERNMENT HACKATHON HANDS ON LAB
+# GOVERNMENT HACKATHON HANDS ON LAB DAY 1
+
+Thank you for attending day one of the government. Today, we will be guiding you though snowflake which will help you get 'armed' for day 2. At the end of the day you will experience the following
+
+- Creating a streamlit app based on shared data
+- Analysing data in a Snowflake Notebook using both SQL and Python
+- Ingesting a publically available dataset
+- Creating a share using Provider Studio
+- using data from a share and combining with your own data
+
+These are the the key aspects in order to ensure you will make the most of the hackathon during Day 2
+
+
+
 
 ##### Set up a free trial account in AWS London
+
+https://www.snowflake.com/en/
+
+![alt text](image-32.png)
+
+
+![alt text](image-33.png)
+
+- Select Enterprise, AWS and London
+- Wait for an email and then use the link to log in.
 
 ##### Log into Snowflake
 
