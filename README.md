@@ -164,7 +164,7 @@ We will use the built in notebooks to do some analysis on the synthetic data.  B
 
 ![alt text](assets/image-11.png)
 
-The notebook compute comes pre installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely available within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib
+The notebook compute comes pre installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely available within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib and also add pydeck (this is for the final exercise)
 
 -   Use the dropdown list provided within packages to install matplotlib.
     ![alt text](assets/image-12.png)
@@ -804,7 +804,126 @@ total_energy_area_changes
 
 ![alt text](assets/image-31.png)
 
-**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas.
+### Create a heatmap using H3 using the detailed energy information
+
+- Create a new view using a new **SQL** cell
+
+```SQL
+
+CREATE OR REPLACE VIEW "Energy by Postcode Detail"
+
+as
+
+SELECT *, 'ELECTRIC' as "Energy Type" FROM ENERGY_USAGE.DATA."Electric Meter by Postcode"
+
+UNION 
+
+SELECT *, 'GAS' as "Energy Type" FROM DATA."Gas Meter by Postcode"
+
+```
+- Create a new **python** cell which will forecast the average price of fuel per postcode.  We will also join to the postcode dataset provided by **more metrics**
+
+
+```python
+
+total_energy_detail = session.table('DATA."Energy by Postcode Detail"')
+
+total_energy_detail_changes = total_energy_detail.with_column('Price',F.when(F.col('"Energy Type"')=='GAS',
+                                        F.col('MEAN_CONS_KWH')*F.lit(gas_KWh/100)).else_(F.col('MEAN_CONS_KWH')*F.lit(electric_KWh/100)))
+
+total_energy_detail_changes = total_energy_detail_changes.\
+join(price_cap_change.select('"% change"')).with_column('"New Price"',
+                                                    F.col('PRICE')+ F.col('PRICE')*F.col('"% change"'))
+
+postcodes = session.table('RESIDENTIAL_POSTCODES.GEOLOCAL.GEOLOCAL_RESIDENTIAL_POSTCODE').select('PCD','LAT','LON')
+fuel_cost = total_energy_detail_changes.join(postcodes,postcodes['PCD']==total_energy_detail_changes['POSTCODE'])
+fuel_cost = fuel_cost.group_by('POSTCODE').agg(F.any_value('LAT').alias('LAT'),
+                                              F.any_value('LON').alias('LON'),
+                                              F.mean('"New Price"').alias('"New Price"'),
+                                              F.mean('PRICE').alias('"Price"'))
+
+```
+
+Index the latitude and longitude and group by H3
+
+Create a new python cell using the code below:
+
+```python
+
+H3 = fuel_cost.with_column('H3',F.call_function('H3_LATLNG_TO_CELL_STRING',F.col('LAT'),F.col('LON'),F.lit(5)))\
+.group_by('H3').agg(F.mean('"Price"').alias('"Current_Price"'),
+                   F.mean('"New Price"').alias('"New_Price"'))
+
+```
+Now we will leverage the previously installed **pydeck** package to render a map in H3.
+
+Copy and paste the following python code below:
+
+```python
+
+import pydeck as pdk
+
+H3pd = H3.to_pandas()
+
+color_scheme = f"""[
+    0 * (New_Price/{price_cap} < 1) + 255 * (New_Price/{price_cap} >= 1),
+    114 * (New_Price/{price_cap} < 1) + 100 * (New_Price/{price_cap} >= 1),
+    189 * (New_Price/{price_cap} < 1) + 0 * (New_Price/{price_cap} >= 1)
+    ]"""
+
+
+
+
+
+
+
+h3 = pdk.Layer(
+        "H3HexagonLayer",
+        H3pd,
+        pickable=True,
+        stroked=True,
+        filled=True,
+        extruded=False,
+        get_hexagon="H3",
+        get_fill_color=color_scheme,
+        line_width_min_pixels=0,
+        opacity=0.4)
+
+#### render the map showing trainstations based on overture maps
+
+tooltip = {
+   "html": """<b>H3:</b> {H3} <br> <b>New Price:</b> {New_Price}""",
+   "style": {
+       "width":"50%",
+        "backgroundColor": "steelblue",
+        "color": "white",
+       "text-wrap": "balance"
+   }
+}
+
+st.pydeck_chart(pdk.Deck(
+    map_style=None,
+    initial_view_state=pdk.ViewState(
+        latitude=53,
+        longitude=2.4,
+        zoom=5,
+        height=600
+        ),
+    
+layers= [h3], tooltip = tooltip
+
+))
+
+```
+
+
+You should see a **map** like this:
+
+![alt text](assets/h3.png)
+
+Blue indicates households who will be typically below the price cap and orange indicate above the price cap.  There are various parts which are not covered.  This may be because these areas have postcodes that cover a much wider area than the H3 cells can fit.  You can correct this by leveraging polygons of all the boundaries and filling them with H3 cells.
+
+**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas.  Feel free to reuse any of the code provided in this lab for your own hackathon project.
 
 ## HOMEWORK
 
