@@ -97,11 +97,23 @@ You will see summary metrics based on live calculation - all by using shared dat
 
 >**FACT**  You can create a packaged app which have all the dependent SQL, python packages, images and steamlits which are called 'Native apps'.  This makes a fully functioning app easy to distribute.
 
+
+
+#### Data Analysis
+
+We will use the built in notebooks to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
+
+![alt text](image-13.png)
+
 #### Viewing the data with a notebook
 
 Create a New Notebook 
 
 ![alt text](image-11.png)
+
+Under packages, add matplotlib
+
+![alt text](image-12.png)
 
 Import the following libraries:
 
@@ -216,6 +228,53 @@ population_not_working = population.filter(F.col('OCCUPATION_CODE')==2)
 population_not_working.limit(10)
 
 ```
+
+We will now create a table which counts the number of people working in every household.
+
+```python
+
+population_working = population.filter((F.col('OCCUPATION_CODE')!=2) | (F.col('OCCUPATION_CODE')==1))
+
+working_household = population_working.select('HOUSEHOLD','NI NUMBER').group_by(F.col('HOUSEHOLD')).agg(F.count('*').alias('WORKING_PEOPLE'))
+
+working_household.limit(10)
+
+```
+
+Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household datafreame we just created and then filtered out any matches
+
+```python
+
+import matplotlib.pyplot as plt
+
+population_entitled_cold_weather = population_not_working.join(working_household, on=(population_not_working['HOUSEHOLD']==working_household['HOUSEHOLD']), how='outer',rsuffix='_L').drop('HOUSEHOLD_L')\
+.filter(F.col('WORKING_PEOPLE').isNull()).drop('WORKING_PEOPLE')
+
+st.metric('Total entitled for cold weather payments:', population_entitled_cold_weather.count())
+
+st.markdown('#### Sample of data extracted')
+population_entitled_cold_weather.sample(0.5).limit(10)
+hist = population_entitled_cold_weather.select(F.col('AGE')).distinct().to_pandas().hist(bins=7)
+
+col1,col2,col3 = st.columns([0.2,0.6,0.2])
+with col2:
+    plt.show()
+
+```
+
+Now, let's create a table with names and addresses of all households who will get a cold weather payment if the weather permits this.
+
+```python
+
+households_cold_weather = population_entitled_cold_weather.with_column('ELECTRICITY_BILL_PAYER',F.concat('FIRST_NAME',F.lit(' '),'LAST_NAME')).group_by('HOUSEHOLD','ADDRESS_1','ADDRESS_2','ADDRESS_3','POSTCODE','LSOA_CODE')\
+.agg(F.any_value('ELECTRICITY_BILL_PAYER').alias('HOUSEHOLD_BILL_PAYER'),F.count('*').alias('NUMBER OF OCCUPANTS'))
+
+households_cold_weather.sample(0.2).limit(10)
+
+```
+
+We have now managed to work out who would be entitled based on who is not working, and who doesnt live with anyone who is working.  Of course, in reality the selection would be more scientific - such as measuring based on who is receiving universal credits.
+
 
 
 TBA   .... this will be a notebook which will leverage the data in the private share.
