@@ -614,9 +614,9 @@ Add a python cell to load the data into a dataframe
 
 ```python
 
-total_energy = session.table('"Energy by Postcode Area"')
+total_energy_area = session.table('"Energy by Postcode Area"')
 
-total_energy;
+total_energy_area;
 
 ```
 
@@ -625,9 +625,68 @@ Create a basic dataframe which views both datasets
 ```python
 
 
-total_energy.group_by('"Energy Type"').agg(F.sum('NUM_METERS'),
+total_energy = total_energy_area.group_by('"Energy Type"').agg(F.sum('NUM_METERS'),
                                           F.mean('MEAN_CONS_KWH'),
                                           F.median('MEDIAN_CONS_KWH'))
 
+total_energy
+
 
 ```
+
+We will now add some variables to change the price cap as well as the current prices of gas and electric
+
+```python
+
+electric_KWh = st.number_input('Electric KWh in pence',1.00,30.00,22.36)
+gas_KWh = st.number_input('Gas KWh in pence',1.00,7.00,5.48)
+price_cap = st.number_input('Price Cap',1,6000,2000)
+
+```
+
+![alt text](image-30.png)
+
+
+Next apply the price variables for gas and electric to the data
+
+```python
+
+total_energy_avg_price = total_energy.with_column('Price',F.when(F.col('"Energy Type"')=='GAS',
+                                        F.col('AVG(MEAN_CONS_KWH)')*F.lit(gas_KWh/100)).else_(F.col('AVG(MEAN_CONS_KWH)')*F.lit(electric_KWh/100)))
+
+total_energy_avg_price
+
+```
+
+
+Next add the % change of prices based on the price cap variable
+
+```python
+
+price_cap_change = total_energy_avg_price.agg(F.sum('PRICE')).with_column('cap_price',
+                                                                          F.lit(price_cap)).with_column('% change',
+                                                                                                        F.div0('SUM(PRICE)',
+                                                                                                               'CAP_PRICE'))
+
+price_cap_change
+
+```
+
+
+Finally apply the % change to all postcode areas
+
+```python
+
+total_energy_area_changes = total_energy_area.with_column('Price',F.when(F.col('"Energy Type"')=='GAS',
+                                        F.col('MEAN_CONS_KWH')*F.lit(gas_KWh/100)).else_(F.col('MEAN_CONS_KWH')*F.lit(electric_KWh/100)))
+
+total_energy_area_changes = total_energy_area_changes.\
+join(price_cap_change.select('"% change"')).with_column('"New Price"',
+                                                    F.col('PRICE')+ F.col('PRICE')*F.col('"% change"'))
+
+total_energy_area_changes
+
+```
+
+
+![alt text](image-31.png)
