@@ -804,7 +804,7 @@ total_energy_area_changes
 
 ![alt text](assets/image-31.png)
 
-### Create a heatmap using H3 using the detailed energy information
+### 3.4 Create a heatmap using H3 using the detailed energy information
 
 - Create a new view using a new **SQL** cell
 
