@@ -804,3 +804,7 @@ total_energy_area_changes
 ![alt text](image-31.png)
 
 Well done, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be accross all postcode areas.
+
+## HOMEWORK
+
+Between now and the next session, please decide which dataset you would like to work with.  You will be using the time to analyse your data and then, you will be sharing this dataset in provider studio.  
