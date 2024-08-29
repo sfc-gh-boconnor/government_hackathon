@@ -19,12 +19,12 @@ These are the the key aspects in order to ensure you will make the most of the h
 
     https://www.snowflake.com/en/
 
-    ![alt text](image-32.png)
+    ![alt text](assets/image-32.png)
 
 - When you get to the cloud options, select **Enterprise**, **AWS** and **London**.  Using the same region and cloud will make the sharing sections of the data quicker.
 
 
-    ![alt text](image-33.png)
+    ![alt text](assets/image-33.png)
 
 - Select Enterprise, AWS and London
 - Wait for an email and then use the link to log in.
@@ -36,7 +36,7 @@ Welcome to Snowflake.  Before we can continue with the lab, we will be sharing y
 
 - Copy your account identifier.   You will be able to access this by clicking on your name at the bottom left hand of the screen 
 
-    ![alt text](image-34.png)
+    ![alt text](assets/image-34.png)
 
 
 - Open up the following google form and supply your account identifier with your full name and organisation
@@ -60,7 +60,7 @@ Today we will go though a working example of how data sharing can allow you to m
 
     Once you press **Get** to get the data, you will see a new database appear in your trial account.  It should look like this:
 
-![alt text](image-1.png)
+![alt text](assets/image-1.png)
 
 -   Open up a new worksheet and run the following SQL code.
 
@@ -98,22 +98,22 @@ Today we will manually add the files needed to run the app using the snowflake U
 
 - Open up the **POLICY_CHANGE_SIMULATOR_STREAMLIT** database and navigate to the streamlit stage
 
-![alt text](image-2.png)
+![alt text](assets/image-2.png)
 
 - Download following file and import it to the the stage
 
     [home.py](Home.py)
 
-    ![alt text](image-3.png)
+    ![alt text](assets/image-3.png)
 
 Download the following pages and add to a new directory called pages
 
-![alt text](image-5.png)
+![alt text](assets/image-5.png)
 
 
 [pages](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/pages)
 
-![alt text](image-4.png)
+![alt text](assets/image-4.png)
 
 
 
@@ -121,19 +121,19 @@ Download the following pages and add to a new directory called pages
 
     [Images](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/images)
 
-    ![Images](image-6.png)
+    ![Images](assets/image-6.png)
 
 -   Download the following file and add it to the home directory
 
     [enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
 
-    ![alt text](image-8.png)
+    ![alt text](assets/image-8.png)
 
 - In the Projects area, click on Streamlit
 
 - You should ses a new streamlit app appear called **Policy Change Simulator**
 
-    ![Image](image-7.png)
+    ![Image](assets/image-7.png)
 
 -   Click on the **new app** and wait for it to start.
 
@@ -143,36 +143,36 @@ Download the following pages and add to a new directory called pages
 
 -   Press Save Scenario for more details
 
-    ![alt text](image-9.png)
+    ![alt text](assets/image-9.png)
 
 You will see summary metrics based on live calculation - all by using shared datasets.
 
-![alt text](image-10.png)
+![alt text](assets/image-10.png)
 
->**FACT**  You can create a packaged app which have all the dependent SQL, python packages, images and steamlits which are called 'Native apps'.  This makes a fully functioning app easy to distribute.
+>**FACT**  You can create a packaged app which have all the dependent SQL, python packages, images and streamlits which are called 'Native apps'.  This makes a fully functioning app easy to distribute.
 
-Spend a few minutes trying out difrerent scenarios before we start doing our own ad-hoc analysis using a Snowflake Notebook.
+Spend a few minutes trying out different scenarios before we start doing our own ad-hoc analysis using a Snowflake Notebook.
 
 ## 2 Data Analysis with a Notebook
 
 We will use the built in notebooks to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
 
-![alt text](image-13.png)
+![alt text](assets/image-13.png)
 
 ### 2.1 Viewing the data with a notebook
 
 - Create a **New** Notebook 
 
-![alt text](image-11.png)
+![alt text](assets/image-11.png)
 
-The notebook compute comes pre installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely availalble within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib
+The notebook compute comes pre installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely available within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib
 
 -   Use the dropdown list provided within packages to install matplotlib.
-    ![alt text](image-12.png)
+    ![alt text](assets/image-12.png)
 
-The notebook comes preconfigured with 3 sample cells - please remove all 3 cells and add 1 new cell.  
+The notebook comes pre-configured with 3 sample cells - please remove all 3 cells and add 1 new cell.  
 
--   Copy and paste the folllowing content to import the libraries that we will be using.
+-   Copy and paste the following content to import the libraries that we will be using.
 
 
 ```python
@@ -300,6 +300,7 @@ population_not_working.limit(10)
 ```
 
 We will now create a table which counts the number of people working in every household.
+
 - copy and paste the following into a new **python** cell
 
 ```python
@@ -312,9 +313,10 @@ working_household.limit(10)
 
 ```
 
-Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household datafreame we just created and then filtered out any matches.  We are also importing matplotlib to visualise the distribution of key metrics.
+Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household dataframe we just created and then filtered out any matches.  We are also importing matplotlib to visualise the distribution of key metrics.
 
 - copy and paste the following into a new **python** cell
+
 ```python
 
 import matplotlib.pyplot as plt
@@ -333,7 +335,7 @@ with col2:
     plt.show()
 
 ```
-![alt text](image-14.png)
+![alt text](assets/image-14.png)
 
 
 Now, let's create a table with names and addresses of all households who will get a cold weather payment if the weather permits this.
@@ -355,7 +357,7 @@ We have now managed to work out who would be entitled based on who is not workin
 ![old map](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxJL4NtRzeve1MRtNaKbc1FO5QC3v-mzoBmA&s)
 
 
-In order to understand the where, we need to look at the location of the residents.  We have postcodes but we do not currently know where abouts in the world they are linked to.  The **More Metrics** dataset has a free listing of all UK postcodes.
+In order to understand the where, we need to look at the location of the residents.  We have postcodes but we do not currently know whereabouts in the world they are linked to.  The **More Metrics** dataset has a free listing of all UK postcodes.
 
 - Create a new **python** cell to retrieve the postcodes from **more metrics** dataset.  Use the code below
 
@@ -390,7 +392,7 @@ st.map(sample)
 st.dataframe(sample)
 ```
 
-![alt text](image-15.png)
+![alt text](assets/image-15.png)
 
 
 ### 2.4 THE WHEN
@@ -455,7 +457,7 @@ weather_station.limit(100).to_pandas()
 
 ```
 
-Now we have our mapping, we need to summarise the weather by postcode area (the policy goes by postcode area - i.e (DY13)).   
+Now we have our mapping, we need to summarize the weather by postcode area (the policy goes by postcode area - i.e (DY13)).   
 
 - copy and paste the following into a new **python** cell:
 
@@ -559,27 +561,27 @@ You will both be a provider and a consumer of data.
 
 - Once you have downloaded your designated CSV file, switch back to your existing snowflake notebook and within the data pane, click on the 3 dots on the side of the **DATA** schema to Load data
 
-    ![load_data](image-16.png)
+    ![load_data](assets/image-16.png)
 
 -   Press Browse and find the file you have downloaded on your laptop
 
-    ![alt text](image-17.png)
+    ![alt text](assets/image-17.png)
 
 
-    ![alt text](image-19.png)
+    ![alt text](assets/image-19.png)
 
 -   Call the table Energy_usage_postcode then press Next. 
 
 
 -   Check the column names are as expected then press Load
 
-    ![alt text](image-20.png)
+    ![alt text](assets/image-20.png)
 
 After about 5 seconds you should get something like this:
 
-![alt text](image-21.png)
+![alt text](assets/image-21.png)
 
--   Press Done
+-   Press **Done**
 
 
 -   Add a new **python** cell in the notebook
@@ -627,7 +629,7 @@ meter_data_pcd_area.create_or_replace_view('DATA."Electric Meter by Postcode Are
 
 Once created you will see 2 views appear in the data schema
 
-![alt text](image-22.png)
+![alt text](assets/image-22.png)
 
 As we are sharing the data, we need to make these views secure.  
 - Create a **SQL** cell and copy and paste the following into it.  Again, if you are a provider of **gas** data, change the word Electric to **Gas**.
@@ -651,17 +653,17 @@ We will now create a private listing using provider studio.
 
 - Click on the New Listing button
 
-    ![alt text](image-24.png)
+    ![alt text](assets/image-24.png)
 
 - Call the listing Energy Usage and make sure **Only Specified Customers** is selected
 
-    ![alt text](image-25.png)
+    ![alt text](assets/image-25.png)
 
 - Press **Next**
 
 - In the Whats in the listing button, navigate to the 2 new secure views.
 
-    ![alt text](image-26.png)
+    ![alt text](assets/image-26.png)
 
 -   Select them with the tick boxes then press **Done**
 
@@ -671,13 +673,13 @@ We will now create a private listing using provider studio.
 
 > **HINT**  You and your partner can access the identifier details in the same way as you did this morning (when you provided the identifier so we could share the initial dataset with you)
 
-![alt text](image-27.png)
+![alt text](assets/image-27.png)
 
 
 - Press **Publish**
 
 
-    ![alt text](image-28.png)
+    ![alt text](assets/image-28.png)
 
 
 Check that the other person can get the data.
@@ -689,7 +691,7 @@ Download the data as before.  If your trial account is in the same region/cloud 
 
 
 
-![alt text](image-29.png)
+![alt text](assets/image-29.png)
 
 
 ### 3.3 Analysing both local and shared data from a private listing
@@ -753,7 +755,7 @@ price_cap = st.number_input('Price Cap',1,6000,2000)
 
 ```
 
-![alt text](image-30.png)
+![alt text](assets/image-30.png)
 
 
 Next apply the price variables for gas and electric to the data
@@ -801,9 +803,9 @@ total_energy_area_changes
 ```
 
 
-![alt text](image-31.png)
+![alt text](assets/image-31.png)
 
-Well done, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be accross all postcode areas.
+**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas.
 
 ## HOMEWORK
 
