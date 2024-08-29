@@ -48,7 +48,9 @@ I will share all the datasets during your overview session.
 
 Enjoy your overview session
 
-## Setup the Streamlit app
+## 1 Create a Streamlit app
+
+### 1.1 Setup
 
 Today we will go though a working example of how data sharing can allow you to make better decisions.  We will be going through how to create a policy simulator in order to estimate the impact of changing the cold weather payment policy.  The application in its entirety could have been fully packaged as a **native app**.  However, for this example, you will be manually loading the components just incase you would like to reuse any of the source code on day 2.
 
@@ -136,7 +138,7 @@ Download the following pages and add to a new directory called pages
 -   Click on the **new app** and wait for it to start.
 
 
-### Create a Policy Change Scenario using the new app
+### 1.2 Create a Policy Change Scenario using the new app
 -   Leave the settings 'as-is' in the sidebar, and give the scenario a name
 
 -   Press Save Scenario for more details
@@ -151,13 +153,13 @@ You will see summary metrics based on live calculation - all by using shared dat
 
 Spend a few minutes trying out difrerent scenarios before we start doing our own ad-hoc analysis using a Snowflake Notebook.
 
-## Data Analysis
+## 2 Data Analysis with a Notebook
 
 We will use the built in notebooks to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
 
 ![alt text](image-13.png)
 
-### Viewing the data with a notebook
+### 2.1 Viewing the data with a notebook
 
 - Create a **New** Notebook 
 
@@ -190,10 +192,12 @@ from snowflake.snowpark import types as T
 
 ```
 
-### THE WHO
+### 2.2 THE WHO
+
+![people](https://cdn-blog.adafruit.com/uploads/2017/02/facesofopensource.png)
 Our first part of the analysis is to look at the **WHO**.  The provided shared dataset contains a synthetic population dataset.  We will have a look at the contents of this.
 
--   Copy and paste the following python code into a new cell:
+-   Copy and paste the following python code into a new **python** cell:
 
 ```python
 population = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA."Synthetic Population"')
@@ -212,7 +216,7 @@ with col4:
 
 You can also view the same information using SQL.
 
-Copy and past the following into a new **SQL** cell:
+- Copy and past the following into a new **SQL** cell:
 
 ```sql
 
@@ -221,6 +225,8 @@ SELECT COUNT(*) "Total People", APPROX_COUNT_DISTINCT(HOUSEHOLD) "Total Househol
 
 Now lets look at a sample of the population.  We will look at a sample of 20% of the population and then limit the return to 100 rows
 
+- copy and paste the following into a new **python** cell
+
 ```python
 
 population.sample(0.2).limit(100);
@@ -228,6 +234,7 @@ population.sample(0.2).limit(100);
 ```
 
 Lets see counts of the population py occupations and gender
+- copy and paste the following into a new **python** cell
 
 ```python
 
@@ -241,6 +248,7 @@ st.table(occupation)
 ```
 
 We will utilise streamlit's basic charting capabilities to simply look at the distribution by occupation and gender
+- copy and paste the following into a new **python** cell
 
 ```python
 
@@ -254,6 +262,7 @@ with col2:
 ```
 
 We can use this information to filter the citizens
+- copy and paste the following into a new **python** cell
 
 ```python
 
@@ -267,7 +276,9 @@ with col3:
 
 ```
 
-Add a SQL sell which will reveal a sample of the sample population
+Add a SQL sell which will reveal a sample of the sample population.  The parameters you have just created will be used to filter the query below.
+
+- copy and paste the following into a new **SQL** cell
 
 ```sql
 
@@ -275,9 +286,10 @@ select * from (select * from COLD_WEATHER_PAYMENTS_DATASET.DATA."Synthetic Popul
 
 ```
 
-For the calculator, I have decided that all policies will be based around citizens who are not working, and live in households where everyone else is not working.
+For the calculator, I have decided that all policies will be based around citizens who are **not working**, and live in households where everyone else is **not working**.
 
 lets start of by creating a dataset based on people who are not working
+- copy and paste the following into a new **python** cell
 
 ```python
 
@@ -288,6 +300,7 @@ population_not_working.limit(10)
 ```
 
 We will now create a table which counts the number of people working in every household.
+- copy and paste the following into a new **python** cell
 
 ```python
 
@@ -301,6 +314,7 @@ working_household.limit(10)
 
 Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household datafreame we just created and then filtered out any matches.  We are also importing matplotlib to visualise the distribution of key metrics.
 
+- copy and paste the following into a new **python** cell
 ```python
 
 import matplotlib.pyplot as plt
@@ -324,6 +338,8 @@ with col2:
 
 Now, let's create a table with names and addresses of all households who will get a cold weather payment if the weather permits this.
 
+- copy and paste the following into a new **python** cell
+
 ```python
 
 households_cold_weather = population_entitled_cold_weather.with_column('ELECTRICITY_BILL_PAYER',F.concat('FIRST_NAME',F.lit(' '),'LAST_NAME')).group_by('HOUSEHOLD','ADDRESS_1','ADDRESS_2','ADDRESS_3','POSTCODE','LSOA_CODE')\
@@ -333,13 +349,15 @@ households_cold_weather.sample(0.2).limit(10)
 
 ```
 
-We have now managed to work out who would be entitled based on who is not working, and who doesnt live with anyone who is working.  Of course, in reality the selection would be more scientific - such as measuring based on who is receiving universal credits.
+We have now managed to work out who would be entitled based on who is not working, and who doesn't live with anyone who is working.  Of course, in reality the selection would be more scientific - such as measuring based on who is receiving universal credits.
 
-#### Understanding the Where
+### 2.3 THE WHERE
+![old map](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxJL4NtRzeve1MRtNaKbc1FO5QC3v-mzoBmA&s)
 
-In order to understand the where, we need to look at the location of the residents.  We have postcodes but we do not currently know where abouts in the world they are linked to.  The 'More Metrics' dataset has a free listing of all UK postcodes.
 
-Create a new python cel to retrieve the postcodes from more metrics
+In order to understand the where, we need to look at the location of the residents.  We have postcodes but we do not currently know where abouts in the world they are linked to.  The **More Metrics** dataset has a free listing of all UK postcodes.
+
+- Create a new **python** cell to retrieve the postcodes from **more metrics** dataset.  Use the code below
 
 ```python
 
@@ -351,6 +369,8 @@ postcodes.limit(10)
 
 Lets now join these postcodes to the households who may be entitled to cold weather payments
 
+- Create a new **python** cell and copy and paste the code below
+
 ```python
 
 households_cold_weather_with_points = postcodes.join(households_cold_weather,type='inner',
@@ -359,7 +379,9 @@ households_cold_weather_with_points = postcodes.join(households_cold_weather,typ
 ```
 
 
-We will now leverge the streamlit module st.map to visualise where the residents are located
+We will now leverage the streamlit module st.map to visualise where the residents are located
+
+- Create a new **python** cell and copy and paste the code below
 
 ```python
 sample = households_cold_weather_with_points.sample(0.01)
@@ -371,12 +393,13 @@ st.dataframe(sample)
 ![alt text](image-15.png)
 
 
-#### LETS LOOK AT THE WHEN
+### 2.4 THE WHEN
 
+![BACK_TO_FUTURE](https://static.independent.co.uk/2022/03/29/12/delorean-lego-back-to-the-future-set-indybest.jpg)
 
 We want the policy to pay a cold weather payment only when the weather has reached a certain level.  At this point in time, its based on postcode, and its based on if the weather gets colder than 0 degrees in any 7 day rolling period.  For this calculation, we need historical weather data.  This is what we will use the met office weather data for.
 
-copy and past the following into a new python cell:
+- copy and paste the following into a new **python** cell:
 
 ```python
 
@@ -400,7 +423,7 @@ hourly_with_date_grp = hourly_with_date.filter(F.col('"Date"').between('2022-11-
 
 ```
 
-Create a new python cel to view the weather data over time as a line chart.  We are looking at Screen Temperature.
+- Create a new **python** cell to view the weather data over time as a line chart.  We are looking at Screen Temperature.
 
 ```python
 
@@ -410,6 +433,7 @@ st.line_chart(hourly_with_date_grp,y='Instantaneous Screen Temperature',x='Date'
 
 We will then group the average temperature by the weather station and date - we want to see average temperature per day rather than hourly
 
+- copy and paste the following into a new **python** cell:
 ```python
 
 hourly_with_date = hourly_with_date.groupBy(F.col('"SSPA Identifier"'),
@@ -418,7 +442,9 @@ hourly_with_date = hourly_with_date.groupBy(F.col('"SSPA Identifier"'),
 hourly_with_date.limit(10)
 
 ```
-You will note that the 'where is infact  a site identifier.  We want to change this so we have postcode sector instead.  A mapping table is used to map the site with postcode
+You will note that the **where** is in fact  a site identifier.  We want to change this so we have postcode sector instead.  A mapping table is used to map the site with postcode
+
+- copy and paste the following into a new **python** cell:
 
 ```python
 
@@ -430,6 +456,8 @@ weather_station.limit(100).to_pandas()
 ```
 
 Now we have our mapping, we need to summarise the weather by postcode area (the policy goes by postcode area - i.e (DY13)).   
+
+- copy and paste the following into a new **python** cell:
 
 ```python
 
@@ -443,11 +471,15 @@ hourly_with_date_ws.limit(10)
 
 ```
 
-Because we need the calculation to be based on a moving average, we need the next calculation to be dynamic.  Snowflake supports window calculations - which allows the calculation to be applied after the result set is generated.
+Because we need the calculation to be based on a moving average, we need the next calculation to be **dynamic**.  Snowflake supports **window** functions - which allows the calculation to be applied after the result set is generated. 
+
+>[more info on window calculations](https://docs.snowflake.com/en/sql-reference/functions-analytic)
+
 
 Lets create a python function to calculate the moving average
 
 
+- copy and paste the following into a new **python** cell:
 ```python
 
 def movaverage(days,df):
@@ -456,9 +488,6 @@ def movaverage(days,df):
     # Add moving averages columns for Cloud Cover and Solar Energy based on the previously defined window
     df = df.with_column('"Temp_Max_Temp_7_Days"',F.max(F.cast("AVERAGE_TEMP",T.FloatType())).over(window)).sort('"Date"')
     
-    
-
-
     # Change the data type to a float
     df = df.with_column('"AVERAGE_TEMP"',F.cast('"AVERAGE_TEMP"',T.FloatType()))
     
@@ -468,6 +497,7 @@ def movaverage(days,df):
 
 Let's now apply the moving average function in order to filter our weather to only provide postcodes where the temperature has ben 0 or below for 7 or more consecutive days
 
+- copy and paste the following into a new **python** cell:
 
 ```python
 
@@ -476,8 +506,9 @@ mov_average
 
 ```
 
-We will now join this filtered weather data set to the effected households that would be entitled to a cold weather payment
+We will now join this filtered weather data set to the effected households that would be entitled to a cold weather payment.
 
+- copy and paste the following into a new **python** cell:
 ```python
 
 people_affected = mov_average.join(households_cold_weather_with_points.drop('LAT','LON'),
@@ -489,6 +520,7 @@ people_affected
 
 
 Finally lets view this on a map
+- copy and paste the following into a new **python** cell:
 
 
 ```python
@@ -497,14 +529,16 @@ st.map(people_affected)
 
 ```
 
+So in summary we have looked at some techniques to understand the who, the when and the where.
 
-#### Creating Your own private listing
+## 3 Private Listings
 
+In this section we will be looking at ingesting data, sharing the data, using a share and finally analysing data from both local and shared data.
 
+### 3.1 Ingesting data
 You saw before how to create a streamlit app - and then leveraged the notebook to analyse the data.
 
 What if we want more data?  There are lots of ways to ingest data.  For this section we will do a simple approach.  There is a dataset which features pre pay meter data.
-
 
 Click on the links below to see an example data set you could use to complement the existing datasets.
 
@@ -512,34 +546,43 @@ https://www.gov.uk/government/statistics/postcode-level-electricity-statistics-2
 
 https://www.gov.uk/government/statistics/postcode-level-gas-statistics-2022
 
-Download one of the files.  In my case, I will download the Postcode level gas statistics.
+#### Nominate a Partner
 
-Once you have downloaded a CSV file, switch back to the snowflake notebook and within the data pane, click on the 3 dots on the side of the 'DATA' schema to Load data
+You will both be a provider and a consumer of data.
 
-![load_data](image-16.png)
+- Agree with the partner on who will be supplying gas statistics and who will be supplying electric statistics. 
 
-Press Browse and find the file you have downloaded on your laptop
+>The Gas provider needs to download [**this**](https://assets.publishing.service.gov.uk/media/65b10088160765001118f7bd/Postcode_level_gas_2022.csv)
 
-![alt text](image-17.png)
-
-
-![alt text](image-19.png)
-
-Call the table Energy_usage_postcode then press Next. 
+>The Electric provider needs to download [**this**](https://assets.publishing.service.gov.uk/media/65b0d1c2f2718c0014fb1be5/Postcode_level_all_meters_electricity_2022.csv)
 
 
-Check the column names are as expected then press Load
+- Once you have downloaded your designated CSV file, switch back to your existing snowflake notebook and within the data pane, click on the 3 dots on the side of the **DATA** schema to Load data
 
-![alt text](image-20.png)
+    ![load_data](image-16.png)
+
+-   Press Browse and find the file you have downloaded on your laptop
+
+    ![alt text](image-17.png)
+
+
+    ![alt text](image-19.png)
+
+-   Call the table Energy_usage_postcode then press Next. 
+
+
+-   Check the column names are as expected then press Load
+
+    ![alt text](image-20.png)
 
 After about 5 seconds you should get something like this:
 
 ![alt text](image-21.png)
 
-Press Done
+-   Press Done
 
 
-Add a new cell in the notebook
+-   Add a new **python** cell in the notebook
 
 
 ```python
@@ -551,7 +594,7 @@ meter_data.limit(10)
 
 You will see that there is a column that says 'All postcodes - this dataset has summary data for each postcode area.  This is useful as the cold weather payment is worked out by postcode area.
 
-Add a new python cell to only retrieve data for each postcode area.
+- Add a new **python** cell to only retrieve data for each postcode area.
 
 ```python
 
@@ -561,7 +604,7 @@ meter_data_pcd_area
 ```
 
 
-Create another cell which shows the detail version.
+- Create another **python** cell which shows the detail version.
 
 ```python
 meter_data_pcd = meter_data.filter(F.col('POSTCODE')!='All postcodes')
@@ -569,10 +612,10 @@ meter_data_pcd.sample(0.05)
 
 ```
 
-
+### 3.1 Prepare Secure Views of data for Sharing
 Now as a data provider, I would like to share this data in this format to other organisations.  For this we need to create secure views of the data (or tables/dynamic tables)
 
-Add a new cell to convert these dataframes to views. **IMPORTANT** replace the word Electric with **Gas** on both view names if you have ingested gas data.
+- Add a new **python** cell to convert these dataframes to views. **IMPORTANT** replace the word Electric with **Gas** on both view names if you have ingested **gas** data.
 
 ```python
 
@@ -586,7 +629,8 @@ Once created you will see 2 views appear in the data schema
 
 ![alt text](image-22.png)
 
-As we are sharing the data, w need to make these views secure.  Create a SQL cell and copy and paste the following into it
+As we are sharing the data, we need to make these views secure.  
+- Create a **SQL** cell and copy and paste the following into it.  Again, if you are a provider of **gas** data, change the word Electric to **Gas**.
 
 ```sql
 
@@ -597,44 +641,43 @@ ALTER VIEW DATA."Electric Meter by Postcode Area" SET SECURE;
 ```
 
 
-#### CREATE A PRIVATE LISTING
+### 3.2 Create a Private Listing
 
 We will now create a private listing using provider studio.
 
 
-Go to the home page, then navigate to Data Products, then **Provider Studio**
+- Go to the home page, then navigate to Data Products, then **Provider Studio**
 
 
-Click on the New Listing button
+- Click on the New Listing button
 
-![alt text](image-24.png)
+    ![alt text](image-24.png)
 
-Call the listing Energy Usage and make sure **Only Specified Customers** is selected
+- Call the listing Energy Usage and make sure **Only Specified Customers** is selected
 
-![alt text](image-25.png)
+    ![alt text](image-25.png)
 
-Press Next
+- Press **Next**
 
-In the Whats in the listing button, navigate to the 2 new secure views.
+- In the Whats in the listing button, navigate to the 2 new secure views.
 
-![alt text](image-26.png)
+    ![alt text](image-26.png)
 
-Select them with the tick boxes then press **Done**
+-   Select them with the tick boxes then press **Done**
 
-Rename the secure share identifier to ENERGY_USAGE_ELECTRIC
+-   Rename the secure share identifier to ENERGY_USAGE_ELECTRIC
 
-Under Add consumer accounts, choose another account that is **not** publishing this dataset and share it with them.   They can access their identifier details in the same way as they did this morning (when you provided the identifier so we could share the initial dataset with you)
+- Under Add consumer accounts area, choose your partners account to share with by typing the identifier into the **add consumer account** box. 
 
-
-
+> **HINT**  You and your partner can access the identifier details in the same way as you did this morning (when you provided the identifier so we could share the initial dataset with you)
 
 ![alt text](image-27.png)
 
 
-Press **Publish**
+- Press **Publish**
 
 
-![alt text](image-28.png)
+    ![alt text](image-28.png)
 
 
 Check that the other person can get the data.
@@ -649,11 +692,15 @@ Download the data as before.  If your trial account is in the same region/cloud 
 ![alt text](image-29.png)
 
 
-So you should now have access to both gas and electricity data.  One local and one from a share.
+### 3.3 Analysing both local and shared data from a private listing
 
-If you haven't already done so, get the other energy listing data from the private shares.
+So you should now have access to both **gas** and **electricity** data.  One local and one from a share.
 
-Go back to the original notebook and this time add a SQL cell.
+If you haven't already done so, get the other energy listing data from the private shares.  
+
+> **HINT** You have already done this step before with the initial data share. The new Data share will be in the Private Sharing area.
+
+- Go back to the original notebook and this time add a **SQL** cell.
 
 
 ```sql
@@ -668,7 +715,9 @@ UNION
 SELECT *, 'GAS' as "Energy Type" FROM DATA."Gas Meter by Postcode Area"
 
 ```
-Add a python cell to load the data into a dataframe
+You have just created a simple view which combines the two datasets together.
+
+- Add a **python** cell to load the data from the view into a dataframe
 
 ```python
 
@@ -678,7 +727,7 @@ total_energy_area;
 
 ```
 
-Create a basic dataframe which views both datasets
+- Create a **basic** dataframe in a new **python** cell which views both datasets
 
 ```python
 
@@ -692,7 +741,9 @@ total_energy
 
 ```
 
-We will now add some variables to change the price cap as well as the current prices of gas and electric
+We will now add some **variables** to change the price cap as well as the current prices of gas and electric
+
+- Copy and paste the following code in a new **python** cell
 
 ```python
 
@@ -707,6 +758,7 @@ price_cap = st.number_input('Price Cap',1,6000,2000)
 
 Next apply the price variables for gas and electric to the data
 
+- Copy and paste the following code in a new **python** cell
 ```python
 
 total_energy_avg_price = total_energy.with_column('Price',F.when(F.col('"Energy Type"')=='GAS',
@@ -719,6 +771,7 @@ total_energy_avg_price
 
 Next add the % change of prices based on the price cap variable
 
+- Copy and paste the following code in a new **python** cell
 ```python
 
 price_cap_change = total_energy_avg_price.agg(F.sum('PRICE')).with_column('cap_price',
@@ -732,6 +785,7 @@ price_cap_change
 
 
 Finally apply the % change to all postcode areas
+- Copy and paste the following code in a new **python** cell
 
 ```python
 
@@ -748,3 +802,5 @@ total_energy_area_changes
 
 
 ![alt text](image-31.png)
+
+Well done, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be accross all postcode areas.
