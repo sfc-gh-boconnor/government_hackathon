@@ -100,9 +100,9 @@ Today we will manually add the files needed to run the app using the snowflake U
 
 - Download following file and import it to the the stage
 
-[home.py](Home.py)
+    [home.py](Home.py)
 
-![alt text](image-3.png)
+    ![alt text](image-3.png)
 
 Download the following pages and add to a new directory called pages
 
@@ -115,33 +115,33 @@ Download the following pages and add to a new directory called pages
 
 
 
-Download the following images and add to a new directory called images
+-   Download the following images and add to a new directory called images
 
-[Images](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/images)
+    [Images](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/images)
 
-![Images](image-6.png)
+    ![Images](image-6.png)
 
-Download the following file and add it to the home directory
+-   Download the following file and add it to the home directory
 
-[enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
+    [enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
 
-![alt text](image-8.png)
+    ![alt text](image-8.png)
 
 - In the Projects area, click on Streamlit
 
 - You should ses a new streamlit app appear called **Policy Change Simulator**
 
-![Image](image-7.png)
+    ![Image](image-7.png)
 
-Click on the **new app** and wait for it to start.
+-   Click on the **new app** and wait for it to start.
 
 
-##### Create a Scenario
-Leave the settings 'as-is' in the sidebar, and give the scenario a name
+### Create a Policy Change Scenario using the new app
+-   Leave the settings 'as-is' in the sidebar, and give the scenario a name
 
-Press Save Scenario for more details
+-   Press Save Scenario for more details
 
-![alt text](image-9.png)
+    ![alt text](image-9.png)
 
 You will see summary metrics based on live calculation - all by using shared datasets.
 
@@ -149,25 +149,29 @@ You will see summary metrics based on live calculation - all by using shared dat
 
 >**FACT**  You can create a packaged app which have all the dependent SQL, python packages, images and steamlits which are called 'Native apps'.  This makes a fully functioning app easy to distribute.
 
+Spend a few minutes trying out difrerent scenarios before we start doing our own ad-hoc analysis using a Snowflake Notebook.
 
-
-#### Data Analysis
+## Data Analysis
 
 We will use the built in notebooks to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
 
 ![alt text](image-13.png)
 
-#### Viewing the data with a notebook
+### Viewing the data with a notebook
 
-Create a New Notebook 
+- Create a **New** Notebook 
 
 ![alt text](image-11.png)
 
-Under packages, add matplotlib
+The notebook compute comes pre installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely availalble within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib
 
-![alt text](image-12.png)
+-   Use the dropdown list provided within packages to install matplotlib.
+    ![alt text](image-12.png)
 
-Import the following libraries:
+The notebook comes preconfigured with 3 sample cells - please remove all 3 cells and add 1 new cell.  
+
+-   Copy and paste the folllowing content to import the libraries that we will be using.
+
 
 ```python
 
@@ -185,9 +189,11 @@ from snowflake.snowpark import types as T
 
 
 ```
-Our first part of the analysis is to look at the 'WHO'.  The provided shared dataset contains a synthetic population dataset.  We will have a look at the contents of this.
 
-Copy and paste the following python code into a new cell:
+### THE WHO
+Our first part of the analysis is to look at the **WHO**.  The provided shared dataset contains a synthetic population dataset.  We will have a look at the contents of this.
+
+-   Copy and paste the following python code into a new cell:
 
 ```python
 population = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA."Synthetic Population"')
