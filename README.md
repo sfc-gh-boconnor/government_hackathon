@@ -241,7 +241,7 @@ working_household.limit(10)
 
 ```
 
-Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household datafreame we just created and then filtered out any matches
+Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household datafreame we just created and then filtered out any matches.  We are also importing matplotlib to visualise the distribution of key metrics.
 
 ```python
 
@@ -253,14 +253,16 @@ population_entitled_cold_weather = population_not_working.join(working_household
 st.metric('Total entitled for cold weather payments:', population_entitled_cold_weather.count())
 
 st.markdown('#### Sample of data extracted')
-population_entitled_cold_weather.sample(0.5).limit(10)
-hist = population_entitled_cold_weather.select(F.col('AGE')).distinct().to_pandas().hist(bins=7)
+hist_sample = population_entitled_cold_weather.sample(0.2)#.limit(1000)
+hist = hist_sample.select(F.col('AGE'),'MORBILITIES','YEARS_AT_ADDRESS','DISTANCE_FROM_PRACTICE').to_pandas().hist(bins=7)
 
 col1,col2,col3 = st.columns([0.2,0.6,0.2])
 with col2:
     plt.show()
 
 ```
+![alt text](image-14.png)
+
 
 Now, let's create a table with names and addresses of all households who will get a cold weather payment if the weather permits this.
 
@@ -275,10 +277,177 @@ households_cold_weather.sample(0.2).limit(10)
 
 We have now managed to work out who would be entitled based on who is not working, and who doesnt live with anyone who is working.  Of course, in reality the selection would be more scientific - such as measuring based on who is receiving universal credits.
 
+#### Understanding the Where
+
+In order to understand the where, we need to look at the location of the residents.  We have postcodes but we do not currently know where abouts in the world they are linked to.  The 'More Metrics' dataset has a free listing of all UK postcodes.
+
+Create a new python cel to retrieve the postcodes from more metrics
+
+```python
+
+postcodes = session.table('RESIDENTIAL_POSTCODES.GEOLOCAL.GEOLOCAL_RESIDENTIAL_POSTCODE')
+postcodes = postcodes.select('"PCD"',F.col('LAT').astype(T.FloatType()).alias('LAT'),F.col('LON').astype(T.FloatType()).alias('LON'))
+postcodes.limit(10)
+
+```
+
+Lets now join these postcodes to the households who may be entitled to cold weather payments
+
+```python
+
+households_cold_weather_with_points = postcodes.join(households_cold_weather,type='inner',
+                     on=postcodes['"Postcode"']==households_cold_weather['POSTCODE'])
+
+```
 
 
-TBA   .... this will be a notebook which will leverage the data in the private share.
+We will now leverge the streamlit module st.map to visualise where the residents are located
+
+```python
+sample = households_cold_weather_with_points.sample(0.01)
+
+st.map(sample)
+st.dataframe(sample)
+```
+
+![alt text](image-15.png)
+
+
+#### LETS LOOK AT THE WHEN
+
+
+We want the policy to pay a cold weather payment only when the weather has reached a certain level.  At this point in time, its based on postcode, and its based on if the weather gets colder than 0 degrees in any 7 day rolling period.  For this calculation, we need historical weather data.  This is what we will use the met office weather data for.
+
+copy and past the following into a new python cell:
+
+```python
+
+summary_data = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA."Hourly Forecast"')
+summary_data.show()
+
+```
+
+Creating the calculation will require time series analysis. Lets construct a date from the 'Valid Hour' column  and filter the dates to be when the policy is valid
+
+
+```python
+
+hourly_with_date = summary_data.with_column('"Date"',
+                         F.date_from_parts(F.substr('"Valid Hour"',1,4),
+                                          F.substr('"Valid Hour"',5,2),
+                                          F.substr('"Valid Hour"',7,2)))
+
+hourly_with_date_grp = hourly_with_date.filter(F.col('"Date"').between('2022-11-01','2023-03-31'))\
+.group_by('"Date"').agg(F.avg(F.cast('"Instantaneous Screen Temperature"',T.FloatType())).alias('Instantaneous Screen Temperature'))
+
+```
+
+Create a new python cel to view the weather data over time as a line chart.  We are looking at Screen Temperature.
+
+```python
+
+st.line_chart(hourly_with_date_grp,y='Instantaneous Screen Temperature',x='Date')
+
+```
+
+We will then group the average temperature by the weather station and date - we want to see average temperature per day rather than hourly
+
+```python
+
+hourly_with_date = hourly_with_date.groupBy(F.col('"SSPA Identifier"'),
+                         F.col('"Date"')).agg(F.avg('"Instantaneous Screen Temperature"').alias('AVERAGE_TEMP'))
+
+hourly_with_date.limit(10)
+
+```
+You will note that the 'where is infact  a site identifier.  We want to change this so we have postcode sector instead.  A mapping table is used to map the site with postcode
+
+```python
+
+weather_station = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA.PCSECTORMAPPING')\
+.select('"SiteID"','PC_SECT','LONG','LAT')\
+.with_column('Postcode_Area',F.call_function('SPLIT_PART',F.col('PC_SECT'),'_',1)).distinct()
+weather_station.limit(100).to_pandas()
+
+```
+
+Now we have our mapping, we need to summarise the weather by postcode area (the policy goes by postcode area - i.e (DY13)).   
+
+```python
+
+hourly_with_date_ws = hourly_with_date.join(weather_station,on=weather_station['"SiteID"']==hourly_with_date['"SSPA Identifier"'])\
+.group_by('"Date"',
+          'POSTCODE_AREA').agg(F.avg(F.cast('LAT',T.FloatType())).alias('LAT'),
+                               F.avg(F.cast('LONG',T.FloatType())).alias('LON'),
+                               F.avg(F.cast('AVERAGE_TEMP',T.FloatType())).alias('AVERAGE_TEMP'))
+
+hourly_with_date_ws.limit(10)
+
+```
+
+Because we need the calculation to be based on a moving average, we need the next calculation to be dynamic.  Snowflake supports window calculations - which allows the calculation to be applied after the result set is generated.
+
+Lets create a python function to calculate the moving average
+
+
+```python
+
+def movaverage(days,df):
+    window = Window.partition_by(F.col('"POSTCODE_AREA"')).orderBy(F.col('"Date"').desc()).rows_between(Window.currentRow,7)
+
+    # Add moving averages columns for Cloud Cover and Solar Energy based on the previously defined window
+    df = df.with_column('"Temp_Max_Temp_7_Days"',F.max(F.cast("AVERAGE_TEMP",T.FloatType())).over(window)).sort('"Date"')
+    
+    
+
+
+    # Change the data type to a float
+    df = df.with_column('"AVERAGE_TEMP"',F.cast('"AVERAGE_TEMP"',T.FloatType()))
+    
+    return df
+
+```
+
+Let's now apply the moving average function in order to filter our weather to only provide postcodes where the temperature has ben 0 or below for 7 or more consecutive days
+
+
+```python
+
+mov_average = movaverage(7,hourly_with_date_ws).filter(F.col('"Temp_Max_Temp_7_Days"')<=0)
+mov_average
+
+```
+
+We will now join this filtered weather data set to the effected households that would be entitled to a cold weather payment
+
+```python
+
+people_affected = mov_average.join(households_cold_weather_with_points.drop('LAT','LON'),
+                 on= mov_average['POSTCODE_AREA'] == F.call_function('SPLIT_PART', households_cold_weather_with_points['"PCD"'],F.lit(' '),1))
+
+people_affected
+
+```
+
+
+Finally lets view this on a map
+
+
+```python
+
+st.map(people_affected)
+
+```
+
 
 #### Creating Your own private listing
 
-TBA
+
+You saw before how to create a streamlit app - and then leveraged the notebook to analyse the data.
+
+What if we want more data?  There are lots of ways to ingest data.  For this section we will do a simple approach.  There is a dataset which features pre pay meter data.
+
+
+Click on the link below to see an example data set you could use to complement the existing datasets.
+
+https://www.data.gov.uk/dataset/8431c6f7-73aa-4650-a0bb-01f277608981/electricity-prepayment-meters
