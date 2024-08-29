@@ -923,7 +923,7 @@ You should see a **map** like this:
 
 Blue indicates households who will be typically below the price cap and orange indicate above the price cap.  There are various parts which are not covered.  This may be because these areas have postcodes that cover a much wider area than the H3 cells can fit.  You can correct this by leveraging polygons of all the boundaries and filling them with H3 cells.
 
-**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas.  Feel free to reuse any of the code provided in this lab for your own hackathon project.
+**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas.  Feel free to reuse any of the code provided in this lab for your own Hackathon project.
 
 ## HOMEWORK
 
