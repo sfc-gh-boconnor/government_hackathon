@@ -448,6 +448,97 @@ You saw before how to create a streamlit app - and then leveraged the notebook t
 What if we want more data?  There are lots of ways to ingest data.  For this section we will do a simple approach.  There is a dataset which features pre pay meter data.
 
 
-Click on the link below to see an example data set you could use to complement the existing datasets.
+Click on the links below to see an example data set you could use to complement the existing datasets.
 
-https://www.data.gov.uk/dataset/8431c6f7-73aa-4650-a0bb-01f277608981/electricity-prepayment-meters
+https://www.gov.uk/government/statistics/postcode-level-electricity-statistics-2022
+
+https://www.gov.uk/government/statistics/postcode-level-gas-statistics-2022
+
+Download one of the files.  In my case, I will download the Postcode level gas statistics.
+
+Once you have downloaded a CSV file, switch back to the snowflake notebook and within the data pane, click on the 3 dots on the side of the 'DATA' schema to Load data
+
+![load_data](image-16.png)
+
+Press Browse and find the file you have downloaded on your laptop
+
+![alt text](image-17.png)
+
+
+![alt text](image-19.png)
+
+Call the table Energy_usage_postcode then press Next. 
+
+
+Check the column names are as expected then press Load
+
+![alt text](image-20.png)
+
+After about 5 seconds you should get something like this:
+
+![alt text](image-21.png)
+
+Press Done
+
+
+Add a new cell in the notebook
+
+
+```python
+
+meter_data = session.table('POLICY_CHANGE_SIMULATOR_STREAMLIT.DATA.ENERGY_USAGE_POSTCODE')
+meter_data.limit(10)
+
+```
+
+You will see that there is a column that says 'All postcodes - this dataset has summary data for each postcode area.  This is useful as the cold weather payment is worked out by postcode area.
+
+Add a new python cell to only retrieve data for each postcode area.
+
+```python
+
+meter_data = meter_data.filter(F.col('POSTCODE')=='All postcodes').drop('POSTCODE')
+meter_data
+
+```
+
+
+Create another cell which shows the detail version.
+
+```python
+
+meter_data_pcd = meter_data.filter(F.col('POSTCODE')!='All postcodes')
+meter_data_pcd.sample(0.05)
+
+```
+
+
+Now as a data provider, I would like to share this data in this format to other organisations.  For this we need to create secure views of the data (or tables/dynamic tables)
+
+Add a new cell to convert these dataframes to views
+
+```python
+
+meter_data_pcd.create_or_replace_view('"Electric Meter by Postcode"')
+meter_data_pcd_area.create_or_replace_view('"Electric Meter by Postcode"')
+
+
+```
+
+Once created you will see 2 views appear in the data schema
+
+![alt text](image-22.png)
+
+As we are sharing the data, w need to make these views secure.  Create a SQL cell and copy and paste the following into it
+
+```sql
+
+ALTER VIEW DATA."Electric Meter by Postcode" SET SECURE;
+ALTER VIEW DATA."Electric Meter by Postcode Area" SET SECURE;
+
+
+```
+
+
+#### CREATE A PRIVATE LISTING
+
