@@ -47,6 +47,9 @@ Welcome to Snowflake.  Before we can continue with the lab, we will be sharing y
 I will share all the datasets during your overview session.
 Enjoy your overview session
 
+<hr>
+
+
 ## 1 Create a Streamlit app
 
 ### 1.1 Setup
@@ -185,6 +188,7 @@ Go through the steps in the notebook which you have uploaded to snowflake.  Once
 
 ### 2.2 Review of Section 2
 So in summary we have looked at some techniques to understand the who, the when and the where.  This is all featured around the impacts of cold weather payments.  Another impact might be the cost of energy.  For this exercise you will experience data sharing between one another.
+<hr>
 
 ## 3 Share data with Private Listings
 
@@ -266,6 +270,7 @@ meter_data_pcd = meter_data.filter(F.col('POSTCODE')!='All postcodes')
 meter_data_pcd.sample(0.05)
 
 ```
+<hr>
 
 ### 3.1 Prepare Secure Views of data for Sharing
 Now as a data provider, I would like to share this data in this format to other organisations.  For this we need to create secure views of the data (or tables/dynamic tables)
@@ -577,7 +582,7 @@ You should see a **map** like this:
 
 Blue indicates households who will be typically below the price cap and orange indicate above the price cap.  There are various parts which are not covered.  This may be because these areas have postcodes that cover a much wider area than the H3 cells can fit.  You can correct this by leveraging polygons of all the boundaries and filling them with H3 cells.
 
-**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas.  Feel free to reuse any of the code provided in this lab for your own Hackathon project.
+**Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas and depdending on the simulated price cap.  Feel free to reuse any of the code provided in this lab for your own Hackathon project.
 
 ## HOMEWORK
 
