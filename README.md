@@ -156,383 +156,37 @@ Spend a few minutes trying out different scenarios before we start doing our own
 
 We will use the built in notebooks to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
 
+- Go to the market place and search for residential postcodes.  Get the data.
+
 ![alt text](assets/image-13.png)
 
 ### 2.1 Viewing the data with a notebook
 
-- Create a **New** Notebook 
+Now you have the data and have leveraged a streamlit app, let's take a step back and have a look at how the raw data can be analysed.
 
-![alt text](assets/image-11.png)
+- Back in the homepage, selecct Projects and then **Notebooks**
+- Create a Notebook by importing from a **.ipynb file**
 
-The notebook compute comes pre installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely available within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib and also add pydeck (this is for the final exercise)
+    ![alt text](assets/image-35.png)
 
--   Use the dropdown list provided within packages to install matplotlib.
+-   Select the downloaded notebook and press **Open**.
+
+- Choose POLICY_CHANGE_SIMULATOR under for Notebook location and NOTEBOOKS under schema
+
+-   Choose POLICY_CHANGE_SIMULATOR_WH for warehouse and then press **create**
+
+The notebook compute comes pre-installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely available within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib.  Also, add pydeck which will be used for the final exercise.
+
+-   Use the dropdown list provided within packages to install matplotlib and pydeck.
     ![alt text](assets/image-12.png)
 
-The notebook comes pre-configured with 3 sample cells - please remove all 3 cells and add 1 new cell.  
 
--   Copy and paste the following content to import the libraries that we will be using.
+Go through the steps in the notebook which you have uploaded to snowflake.  Once you have completed section 2, return to this guide.
 
+### 2.2 Review of Section 2
+So in summary we have looked at some techniques to understand the who, the when and the where.  This is all featured around the impacts of cold weather payments.  Another impact might be the cost of energy.  For this exercise you will experience data sharing between one another.
 
-```python
-
-#  Copyright (c) 2023 Snowflake Computing Inc. All rights reserved.
-
-# Import python packages
-import streamlit as st
-import pandas as pd
-from snowflake.snowpark import functions as F   
-from snowflake.snowpark.window import Window
-# We can also use Snowpark for our analyses!
-from snowflake.snowpark.context import get_active_session
-session = get_active_session()
-from snowflake.snowpark import types as T
-
-
-```
-
-### 2.2 THE WHO
-
-![people](https://cdn-blog.adafruit.com/uploads/2017/02/facesofopensource.png)
-Our first part of the analysis is to look at the **WHO**.  The provided shared dataset contains a synthetic population dataset.  We will have a look at the contents of this.
-
--   Copy and paste the following python code into a new **python** cell:
-
-```python
-population = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA."Synthetic Population"')
-
-col1,col2,col3,col4= st.columns(4)
-
-with col1:
-    st.metric('Total Population: ', population.count())
-with col2:
-    st.metric('Total Households:', population.select('HOUSEHOLD').distinct().count())
-with col3:
-    st.metric('Total Not Working', population.filter(F.col('OCCUPATION_CODE')==2).count())
-with col4:
-    st.metric('Total Under 16yr olds', population.filter(F.col('OCCUPATION_CODE')!=1).count())
-```
-
-You can also view the same information using SQL.
-
-- Copy and past the following into a new **SQL** cell:
-
-```sql
-
-SELECT COUNT(*) "Total People", APPROX_COUNT_DISTINCT(HOUSEHOLD) "Total Households", COUNT(CASE OCCUPATION_CODE WHEN 2 THEN 1 END) "Total Not Working" FROM COLD_WEATHER_PAYMENTS_DATASET.DATA."Synthetic Population"
-```
-
-Now lets look at a sample of the population.  We will look at a sample of 20% of the population and then limit the return to 100 rows
-
-- copy and paste the following into a new **python** cell
-
-```python
-
-population.sample(0.2).limit(100);
-
-```
-
-Lets see counts of the population py occupations and gender
-- copy and paste the following into a new **python** cell
-
-```python
-
-gender = population.group_by('SEX').count()
-occupation = population.group_by('OCCUPATION').agg(F.any_value('OCCUPATION_CODE').alias('Occupation Code')
-                                                   ,F.count('*').alias('COUNT'))
-
-st.table(gender)
-st.table(occupation)
-
-```
-
-We will utilise streamlit's basic charting capabilities to simply look at the distribution by occupation and gender
-- copy and paste the following into a new **python** cell
-
-```python
-
-st.markdown('People by Occupation and Sex')
-col1, col2 = st.columns(2)
-with col1:
-    st.bar_chart(occupation,x='OCCUPATION',y='COUNT')
-with col2:
-    st.bar_chart(gender,x='SEX',y='COUNT')
-
-```
-
-We can use this information to filter the citizens
-- copy and paste the following into a new **python** cell
-
-```python
-
-col1,col2,col3 = st.columns(3)
-with col1:
-    Gender = st.radio('Gender',gender)
-with col2:
-    elderly = st.selectbox('Occupation',occupation)
-with col3:
-    Age_Range = st.slider('Age Range',1,99,(1,99))
-
-```
-
-Add a SQL sell which will reveal a sample of the sample population.  The parameters you have just created will be used to filter the query below.
-
-- copy and paste the following into a new **SQL** cell
-
-```sql
-
-select * from (select * from COLD_WEATHER_PAYMENTS_DATASET.DATA."Synthetic Population"  where SEX = '{{Gender}}' and AGE BETWEEN {{Age_Range[0]}}AND {{Age_Range[1]}} )sample(100 rows)
-
-```
-
-For the calculator, I have decided that all policies will be based around citizens who are **not working**, and live in households where everyone else is **not working**.
-
-lets start of by creating a dataset based on people who are not working
-- copy and paste the following into a new **python** cell
-
-```python
-
-population_not_working = population.filter(F.col('OCCUPATION_CODE')==2)
-
-population_not_working.limit(10)
-
-```
-
-We will now create a table which counts the number of people working in every household.
-
-- copy and paste the following into a new **python** cell
-
-```python
-
-population_working = population.filter((F.col('OCCUPATION_CODE')!=2) | (F.col('OCCUPATION_CODE')==1))
-
-working_household = population_working.select('HOUSEHOLD','NI NUMBER').group_by(F.col('HOUSEHOLD')).agg(F.count('*').alias('WORKING_PEOPLE'))
-
-working_household.limit(10)
-
-```
-
-Let's now visualise the people who are not working and also do not live with anyone who is working.  To do this we did a join to the the working household dataframe we just created and then filtered out any matches.  We are also importing matplotlib to visualise the distribution of key metrics.
-
-- copy and paste the following into a new **python** cell
-
-```python
-
-import matplotlib.pyplot as plt
-
-population_entitled_cold_weather = population_not_working.join(working_household, on=(population_not_working['HOUSEHOLD']==working_household['HOUSEHOLD']), how='outer',rsuffix='_L').drop('HOUSEHOLD_L')\
-.filter(F.col('WORKING_PEOPLE').isNull()).drop('WORKING_PEOPLE')
-
-st.metric('Total entitled for cold weather payments:', population_entitled_cold_weather.count())
-
-st.markdown('#### Sample of data extracted')
-hist_sample = population_entitled_cold_weather.sample(0.2)#.limit(1000)
-hist = hist_sample.select(F.col('AGE'),'MORBILITIES','YEARS_AT_ADDRESS','DISTANCE_FROM_PRACTICE').to_pandas().hist(bins=7)
-
-col1,col2,col3 = st.columns([0.2,0.6,0.2])
-with col2:
-    plt.show()
-
-```
-![alt text](assets/image-14.png)
-
-
-Now, let's create a table with names and addresses of all households who will get a cold weather payment if the weather permits this.
-
-- copy and paste the following into a new **python** cell
-
-```python
-
-households_cold_weather = population_entitled_cold_weather.with_column('ELECTRICITY_BILL_PAYER',F.concat('FIRST_NAME',F.lit(' '),'LAST_NAME')).group_by('HOUSEHOLD','ADDRESS_1','ADDRESS_2','ADDRESS_3','POSTCODE','LSOA_CODE')\
-.agg(F.any_value('ELECTRICITY_BILL_PAYER').alias('HOUSEHOLD_BILL_PAYER'),F.count('*').alias('NUMBER OF OCCUPANTS'))
-
-households_cold_weather.sample(0.2).limit(10)
-
-```
-
-We have now managed to work out who would be entitled based on who is not working, and who doesn't live with anyone who is working.  Of course, in reality the selection would be more scientific - such as measuring based on who is receiving universal credits.
-
-### 2.3 THE WHERE
-![old map](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxJL4NtRzeve1MRtNaKbc1FO5QC3v-mzoBmA&s)
-
-
-In order to understand the where, we need to look at the location of the residents.  We have postcodes but we do not currently know whereabouts in the world they are linked to.  The **More Metrics** dataset has a free listing of all UK postcodes.
-
-- Create a new **python** cell to retrieve the postcodes from **more metrics** dataset.  Use the code below
-
-```python
-
-postcodes = session.table('RESIDENTIAL_POSTCODES.GEOLOCAL.GEOLOCAL_RESIDENTIAL_POSTCODE')
-postcodes = postcodes.select('"PCD"',F.col('LAT').astype(T.FloatType()).alias('LAT'),F.col('LON').astype(T.FloatType()).alias('LON'))
-postcodes.limit(10)
-
-```
-
-Lets now join these postcodes to the households who may be entitled to cold weather payments
-
-- Create a new **python** cell and copy and paste the code below
-
-```python
-
-households_cold_weather_with_points = postcodes.join(households_cold_weather,type='inner',
-                     on=postcodes['"Postcode"']==households_cold_weather['POSTCODE'])
-
-```
-
-
-We will now leverage the streamlit module st.map to visualise where the residents are located
-
-- Create a new **python** cell and copy and paste the code below
-
-```python
-sample = households_cold_weather_with_points.sample(0.01)
-
-st.map(sample)
-st.dataframe(sample)
-```
-
-![alt text](assets/image-15.png)
-
-
-### 2.4 THE WHEN
-
-![BACK_TO_FUTURE](https://static.independent.co.uk/2022/03/29/12/delorean-lego-back-to-the-future-set-indybest.jpg)
-
-We want the policy to pay a cold weather payment only when the weather has reached a certain level.  At this point in time, its based on postcode, and its based on if the weather gets colder than 0 degrees in any 7 day rolling period.  For this calculation, we need historical weather data.  This is what we will use the met office weather data for.
-
-- copy and paste the following into a new **python** cell:
-
-```python
-
-summary_data = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA."Hourly Forecast"')
-summary_data.show()
-
-```
-
-Creating the calculation will require time series analysis. Lets construct a date from the 'Valid Hour' column  and filter the dates to be when the policy is valid
-
-
-```python
-
-hourly_with_date = summary_data.with_column('"Date"',
-                         F.date_from_parts(F.substr('"Valid Hour"',1,4),
-                                          F.substr('"Valid Hour"',5,2),
-                                          F.substr('"Valid Hour"',7,2)))
-
-hourly_with_date_grp = hourly_with_date.filter(F.col('"Date"').between('2022-11-01','2023-03-31'))\
-.group_by('"Date"').agg(F.avg(F.cast('"Instantaneous Screen Temperature"',T.FloatType())).alias('Instantaneous Screen Temperature'))
-
-```
-
-- Create a new **python** cell to view the weather data over time as a line chart.  We are looking at Screen Temperature.
-
-```python
-
-st.line_chart(hourly_with_date_grp,y='Instantaneous Screen Temperature',x='Date')
-
-```
-
-We will then group the average temperature by the weather station and date - we want to see average temperature per day rather than hourly
-
-- copy and paste the following into a new **python** cell:
-```python
-
-hourly_with_date = hourly_with_date.groupBy(F.col('"SSPA Identifier"'),
-                         F.col('"Date"')).agg(F.avg('"Instantaneous Screen Temperature"').alias('AVERAGE_TEMP'))
-
-hourly_with_date.limit(10)
-
-```
-You will note that the **where** is in fact  a site identifier.  We want to change this so we have postcode sector instead.  A mapping table is used to map the site with postcode
-
-- copy and paste the following into a new **python** cell:
-
-```python
-
-weather_station = session.table('COLD_WEATHER_PAYMENTS_DATASET.DATA.PCSECTORMAPPING')\
-.select('"SiteID"','PC_SECT','LONG','LAT')\
-.with_column('Postcode_Area',F.call_function('SPLIT_PART',F.col('PC_SECT'),'_',1)).distinct()
-weather_station.limit(100).to_pandas()
-
-```
-
-Now we have our mapping, we need to summarize the weather by postcode area (the policy goes by postcode area - i.e (DY13)).   
-
-- copy and paste the following into a new **python** cell:
-
-```python
-
-hourly_with_date_ws = hourly_with_date.join(weather_station,on=weather_station['"SiteID"']==hourly_with_date['"SSPA Identifier"'])\
-.group_by('"Date"',
-          'POSTCODE_AREA').agg(F.avg(F.cast('LAT',T.FloatType())).alias('LAT'),
-                               F.avg(F.cast('LONG',T.FloatType())).alias('LON'),
-                               F.avg(F.cast('AVERAGE_TEMP',T.FloatType())).alias('AVERAGE_TEMP'))
-
-hourly_with_date_ws.limit(10)
-
-```
-
-Because we need the calculation to be based on a moving average, we need the next calculation to be **dynamic**.  Snowflake supports **window** functions - which allows the calculation to be applied after the result set is generated. 
-
->[more info on window calculations](https://docs.snowflake.com/en/sql-reference/functions-analytic)
-
-
-Lets create a python function to calculate the moving average
-
-
-- copy and paste the following into a new **python** cell:
-```python
-
-def movaverage(days,df):
-    window = Window.partition_by(F.col('"POSTCODE_AREA"')).orderBy(F.col('"Date"').desc()).rows_between(Window.currentRow,7)
-
-    # Add moving averages columns for Cloud Cover and Solar Energy based on the previously defined window
-    df = df.with_column('"Temp_Max_Temp_7_Days"',F.max(F.cast("AVERAGE_TEMP",T.FloatType())).over(window)).sort('"Date"')
-    
-    # Change the data type to a float
-    df = df.with_column('"AVERAGE_TEMP"',F.cast('"AVERAGE_TEMP"',T.FloatType()))
-    
-    return df
-
-```
-
-Let's now apply the moving average function in order to filter our weather to only provide postcodes where the temperature has ben 0 or below for 7 or more consecutive days
-
-- copy and paste the following into a new **python** cell:
-
-```python
-
-mov_average = movaverage(7,hourly_with_date_ws).filter(F.col('"Temp_Max_Temp_7_Days"')<=0)
-mov_average
-
-```
-
-We will now join this filtered weather data set to the effected households that would be entitled to a cold weather payment.
-
-- copy and paste the following into a new **python** cell:
-```python
-
-people_affected = mov_average.join(households_cold_weather_with_points.drop('LAT','LON'),
-                 on= mov_average['POSTCODE_AREA'] == F.call_function('SPLIT_PART', households_cold_weather_with_points['"PCD"'],F.lit(' '),1))
-
-people_affected
-
-```
-
-
-Finally lets view this on a map
-- copy and paste the following into a new **python** cell:
-
-
-```python
-
-st.map(people_affected)
-
-```
-
-So in summary we have looked at some techniques to understand the who, the when and the where.
-
-## 3 Private Listings
+## 3 Share data with Private Listings
 
 In this section we will be looking at ingesting data, sharing the data, using a share and finally analysing data from both local and shared data.
 
@@ -547,11 +201,11 @@ https://www.gov.uk/government/statistics/postcode-level-electricity-statistics-2
 
 https://www.gov.uk/government/statistics/postcode-level-gas-statistics-2022
 
-#### Nominate a Partner
+#### Assigned Peer
 
 You will both be a provider and a consumer of data.
 
-- Agree with the partner on who will be supplying gas statistics and who will be supplying electric statistics. 
+- Agree with the peer on who will be supplying gas statistics and who will be supplying electric statistics. 
 
 >The Gas provider needs to download [**this**](https://assets.publishing.service.gov.uk/media/65b10088160765001118f7bd/Postcode_level_gas_2022.csv)
 
