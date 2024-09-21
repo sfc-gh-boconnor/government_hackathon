@@ -167,6 +167,8 @@ We will use the built in notebooks to do some analysis on the synthetic data.  B
 
 Now you have the data and have leveraged a streamlit app, let's take a step back and have a look at how the raw data can be analysed.
 
+- open the following [notebook](viewing_data_in_notebook.ipynb) and download the file to your computer.
+
 - Back in the homepage, selecct Projects and then **Notebooks**
 - Create a Notebook by importing from a **.ipynb file**
 
