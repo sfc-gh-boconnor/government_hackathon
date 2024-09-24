@@ -586,6 +586,51 @@ Blue indicates households who will be typically below the price cap and orange i
 
 **Well done**, you have created a share to enrich your own data in order to find out what the average yearly cost of fuel will be across all postcode areas and depdending on the simulated price cap.  Feel free to reuse any of the code provided in this lab for your own Hackathon project.
 
-## HOMEWORK
+### 4.0 Create your own Private Listing based on **YOUR** data
 
-Between now and the next session, please decide which dataset you would like to work with.  You will be using the time to analyse your data and then, you will be sharing this dataset in provider studio.  
+
+Hopefully, you should now have some data to share with other users in snowflake. Now is the time to have a go at doing this today
+
+Uploading from the UI
+
+- go to the home page and click on **Upload local files**
+
+    ![alt text](assets/PL001.png)
+
+- Press Browse and find your file
+
+- Click on the **+ Database** to create a new database for your work.  Name the database with something meaningful.  This database will be used for transforming and sharing your data.
+
+- Once you have created your database, you will be able to create a new table using the UI
+
+    ![alt text](assets/PL003.png)
+
+- Press Next
+
+Here you will have the option to modify column names - and it will also let you know if there are any errors.  One of the common errors are invalid column names.  If you wish the names to include lowercase, spaces and special characters, you will need to enclose them with double quotes.
+
+You will also be able to chose what file format you would like to ingest.  The UI supports CSV, JSON, Parquet, Avro or ORC.  (**Note** you can ingest many other file formats programmatically).
+
+- When you are happy with the data, press **Load**.  This will load the new table.
+
+
+Once you have created your new table, you will be able to see it in the notebooks area.
+
+* Create a new Notebook and have a go at viewing the data.  Use SQL or Python - which ever you are most comfortable with.  Use the previous lab to see how we did this before.
+
+* Create a Secure View - Query the data, name your columns in a way that's useful to the consumers.
+
+* Once the secure view is created, create a private listing.
+
+#### Useful Documentation
+
+- [Load Data From the UI](https://docs.snowflake.com/en/user-guide/data-load-web-ui)
+
+- [Secure Views](https://docs.snowflake.com/en/user-guide/views-secure)
+
+- [Creating listing](https://other-docs.snowflake.com/en/collaboration/provider-listings-creating-publishing)
+
+
+
+
+
