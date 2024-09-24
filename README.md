@@ -207,11 +207,11 @@ https://www.gov.uk/government/statistics/postcode-level-electricity-statistics-2
 
 https://www.gov.uk/government/statistics/postcode-level-gas-statistics-2022
 
-#### Assigned Peer
+#### Gas Or Electric??
 
-You will both be a provider and a consumer of data.
+Some of you will be providers of Electric, others will be providers of gas
 
-- Agree with the peer on who will be supplying gas statistics and who will be supplying electric statistics. 
+- In the chat, we have provided you with which accounts are electric providers and which are gas. 
 
 >The Gas provider needs to download [**this**](https://assets.publishing.service.gov.uk/media/65b10088160765001118f7bd/Postcode_level_gas_2022.csv)
 
@@ -329,9 +329,8 @@ We will now create a private listing using provider studio.
 
 -   Rename the secure share identifier to ENERGY_USAGE_ELECTRIC
 
-- Under Add consumer accounts area, choose your partners account to share with by typing the identifier into the **add consumer account** box. 
+- Under Add consumer accounts area, choose your the consumer account to share with by typing the identifier into the **add consumer account** box. 
 
-> **HINT**  You and your partner can access the identifier details in the same way as you did this morning (when you provided the identifier so we could share the initial dataset with you)
 
 ![alt text](assets/image-27.png)
 
@@ -342,12 +341,12 @@ We will now create a private listing using provider studio.
     ![alt text](assets/image-28.png)
 
 
-Check that the other person can get the data.
+Once the assigned provider of the other energy source has shared their data, you will be able to see it in Private sharing.
 
-They need to go to **Private Sharing** and the new dataset should appear.
+ - Go to **Private Sharing** and the new dataset should appear.
 
 
-Download the data as before.  If your trial account is in the same region/cloud the data will be instant.  If its in a different region, it will take 10 minutes.
+Download the data as before.  
 
 
 
