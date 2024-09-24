@@ -589,9 +589,9 @@ Blue indicates households who will be typically below the price cap and orange i
 ### 4.0 Create your own Private Listing based on **YOUR** data
 
 
-Hopefully, you should now have some data to share with other users in snowflake. Now is the time to have a go at doing this today
+Hopefully, you will have access to your own data which you anticipate to share with other users in Snowflake. Now is the time to have a go at doing this today
 
-Uploading from the UI
+#### Uploading from the UI
 
 - go to the home page and click on **Upload local files**
 
