@@ -313,14 +313,35 @@ After about 5 seconds you should get something like this:
 
 **Creating a new Notebook**
 
+- Go back to the Home page and Select Projects
+- Select **Notebooks** and press + Notebook to create a new notebook
+- Give the notebook the name *Energy Usage*
+- For Notebook location, choose *Policy Change Simulator*
+- For Schema, change it from Public to **Notebooks**
+- For Notebook warehouse, select **POLICY_CHANGE_SIMULATOR_WH
+- Press **Create**
 
+#### Adding packages and import libraries
 
+-   Same as earlier, add the **pydeck** by importing the package
+
+- You will notice that the notebook will come pre-installed with a sample notebook.  We will not be using cell 2 and 3.
+
+- Using the 3 dots in cell 2, click on them and press **Delete**
+
+![alt text](image.png)
+
+- Using the 3 dots in cell 3, click on them and press **Delete**
+
+- Run cell 1
 
 -   Add a new **python** cell in the notebook
 
 
 ```python
 
+from snowflake.snowpark import functions as F
+from snowflake.snowpark import types as T
 meter_data = session.table('POLICY_CHANGE_SIMULATOR_STREAMLIT.DATA.ENERGY_USAGE_POSTCODE')
 meter_data.limit(10)
 
