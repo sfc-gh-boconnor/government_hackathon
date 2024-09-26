@@ -204,15 +204,26 @@ Spend a few minutes trying out different scenarios before we start doing our own
 
 ## 2 Data Analysis with a Notebook
 
-We will use a notebook to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
+We will use a notebook to do some analysis on the synthetic data.  Before this you will need to link to an additional data share. 
 
-- Go to the market place and search for residential postcodes.  Get the data.
+- Go back to the home page and select **Data Products**
+
+
+- Residential postcodes.  
+
+- Click on the Residential postcodes More Metrics Dataset.  This provides all the coordinates for every postcode in the UK
 
 ![alt text](assets/image-13.png)
 
+- Press **Get** to get the data.
+
+- Press **Done**
+
+
+
 ### 2.1 Viewing the data with a notebook
 
-Now you have the data and have leveraged a streamlit app, let's take a step back and have a look at how the raw data can be analysed.
+Now you have the data and have created a streamlit app, you will take a step back and have a look at how the raw data can be analysed.
 
 - open the following [notebook](viewing_data_in_notebook.ipynb) and download the file to your computer.
 
@@ -227,11 +238,12 @@ Now you have the data and have leveraged a streamlit app, let's take a step back
 
 -   Choose POLICY_CHANGE_SIMULATOR_WH for warehouse and then press **create**
 
-The notebook compute comes pre-installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage matplotlib.  As this package is freely available within the Snowflake Anoconda channel, you can install it easily using the packages dropdown packages, add matplotlib.  Also, add pydeck which will be used for the final exercise.
+The notebook compute comes pre-installed with some basic packages which include snowpark and streamlit.  In this scenario we would also like to leverage **matplotlib** and **pydeck**.  As this package is freely available within the Snowflake Annoconda channel, you can install these supported packages easily.
 
 -   Use the dropdown list provided within packages to install matplotlib and pydeck.
-    ![alt text](assets/image-12.png)
+    ![alt text](assets/image-12b.png)
 
+- Press **Start** to start the notebook.
 
 Go through the steps in the notebook which you have uploaded to snowflake.  Once you have completed section 2, return to this guide.
 
