@@ -15,9 +15,9 @@ These are the the key aspects in order to ensure you will make the most of the h
 
 ## Set up a free trial account in AWS London
 
-- Navigate to the following website and start a free trial of snowflake
+- Navigate to the following website By right clicking on the link below to open a new tab and start a free trial of snowflake
 
-    https://www.snowflake.com/en/
+    https://www.snowflake.com/en/ 
 
     ![alt text](assets/image-32.png)
 
