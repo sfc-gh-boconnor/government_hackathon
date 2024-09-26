@@ -122,11 +122,19 @@ QUERY_WAREHOUSE = POLICY_CHANGE_SIMULATOR_WH;
 
 - Wait for all 8 sql commands to execute.
 
-Today we will manually add the files needed to run the app using the snowflake UI.  however, in practices it is much easier to leverage **Visual Studio Code** as demonstrated today.  You may wish to leverage Visual Studio Code in the second part of the hackathon.
 
-- Once you have run the code, new objects would have been created
+#### Adding the Files to run the app
 
-- Open up the **POLICY_CHANGE_SIMULATOR_STREAMLIT** database and navigate to the streamlit stage
+Today we will manually add the files needed to run the app using the snowflake UI.  however, in practice it is much easier to leverage **Visual Studio Code**  as a 'client IDE'  You may wish to leverage Visual Studio Code in the second part of the hackathon.  We will be available to help you connect snowflake to Visual Studio Code if this is something you wish to do.
+
+
+- Press the 'House' to navigate to the home page
+- Click on Data, then expand **POLICY_CHANGE_SIMULATOR_STREAMLIT**
+
+- Expand **POLICY_CHANGE_SIMULATOR_STREAMLIT** and expand **STREAMLITS**
+- Expand Stages and click on **STREAMLIT_STAGE**
+
+
 
 ![alt text](assets/image-2.png)
 
