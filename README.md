@@ -57,7 +57,8 @@ Welcome to Snowflake.  Before we can continue with the lab, we will be sharing y
     https://forms.gle/JXF4zSKZP6X26Unr6
 
 
-I will share all the datasets during your overview session.
+I will share all the datasets with your newly created trial account during your overview session.
+
 Enjoy your overview session
 
 <hr>
