@@ -21,13 +21,22 @@ These are the the key aspects in order to ensure you will make the most of the h
 
     ![alt text](assets/image-32.png)
 
-- When you get to the cloud options, select **Enterprise**, **AWS** and **London**.  Using the same region and cloud will make the sharing sections of the data quicker.
+- Fill in the fields provided with your details and press Continue.
+
+- When you get to the cloud options, select **Enterprise**, **AWS** and **Europe (London)**.  
+- Check the box to agree to the Self Service On Demand Terms.
+- Press **Get Started**
+
 
 
     ![alt text](assets/image-33.png)
 
-- Select Enterprise, AWS and London
-- Wait for an email and then use the link to log in.
+
+- Either Skip or answer the multiple choice questions.
+- Wait for an email called **Activate your Snowflake account** 
+- Within the email click the button **CLICK TO ACTIVATE**  
+- Create a Username and Password then press **Get Started**.
+- When you see the Welcome to Snowflake! How do you want to start? click **Skip fo now** 
 
 
 ## Log into Snowflake
