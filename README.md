@@ -138,18 +138,25 @@ Today we will manually add the files needed to run the app using the snowflake U
 
 ![alt text](assets/image-2.png)
 
+- Press **+Files**
 - Download following file and import it to the the stage
 
     [home.py](Home.py)
 
     ![alt text](assets/image-3.png)
 
-Download the following pages and add to a new directory called pages
+- Click on ** + Files ** to load more files.
+
+Download the following files 
+
+[pages](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/pages)
+
+- Upload the files to a new directory called pages.  To do this, before uploading the files, type /pages where it says *"Specify the path to an existing folder or create a new one"*
 
 ![alt text](assets/image-5.png)
 
 
-[pages](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/pages)
+
 
 ![alt text](assets/image-4.png)
 
