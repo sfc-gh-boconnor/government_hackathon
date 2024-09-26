@@ -70,15 +70,25 @@ Enjoy your overview session
 
 Today we will go though a working example of how data sharing can allow you to make better decisions.  We will be going through how to create a policy simulator in order to estimate the impact of changing the cold weather payment policy.  The application in its entirety could have been fully packaged as a **native app**.  However, for this example, you will be manually loading the components just incase you would like to reuse any of the source code on day 2.
 
+- Within the navigation menu you will see a menu item called **Data Products**.  Click to expand.
 
+- Click on **Private Sharing**.
 
--  Go to the Private Share area to access the private datasets that you will need.  The private share should now be available, if not - let us know!
+-  You will see a private share called **Cold Weather Payments Dataset**.
 
-    Once you press **Get** to get the data, you will see a new database appear in your trial account.  It should look like this:
+- Press **Get** to get the data.  You will see a new database appear in your trial account.  If you navigate to **Data** you will see the share which will look like this:
 
 ![alt text](assets/image-1.png)
 
--   Open up a new worksheet and run the following SQL code.
+#### Creating your own database
+
+You will now create a database to host all the assets needed to try out the simulator.
+
+- Click on Projects from the navigation bar.
+
+- Click on the '+' on the top left hand side of the screen to create a new SQL worksheet
+
+-   Copy and paste the code below into your new SQL worksheet.
 
 ```sql
 
@@ -107,6 +117,10 @@ MAIN_FILE = '/Home.py'
 QUERY_WAREHOUSE = POLICY_CHANGE_SIMULATOR_WH;
 
 ```
+
+- Next to the blue button on the top left hand side of the screen, you will see a drop down menu.  Click on the drop down menu and select **Run All**
+
+- Wait for all 8 sql commands to execute.
 
 Today we will manually add the files needed to run the app using the snowflake UI.  however, in practices it is much easier to leverage **Visual Studio Code** as demonstrated today.  You may wish to leverage Visual Studio Code in the second part of the hackathon.
 
