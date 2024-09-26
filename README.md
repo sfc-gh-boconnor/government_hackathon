@@ -402,14 +402,16 @@ ALTER VIEW DATA."Electric Meter by Postcode Area" SET SECURE;
 We will now create a private listing using provider studio.
 
 
-- Go to the home page, then navigate to Data Products, then **Provider Studio**
+- Go to the home page,and click **Leave** to leave the notebook.
+
+- Navigate to Data Products, then **Provider Studio**
 
 
-- Click on the New Listing button
+- Click on the + Listing button
 
     ![alt text](assets/image-24.png)
 
-- Call the listing Energy Usage and make sure **Only Specified Customers** is selected
+- Call the listing Energy Usage **ELECTRIC OR GAS** and make sure **Only Specified Customers** is selected
 
     ![alt text](assets/image-25.png)
 
@@ -421,7 +423,9 @@ We will now create a private listing using provider studio.
 
 -   Select them with the tick boxes then press **Done**
 
--   Rename the secure share identifier to ENERGY_USAGE_ELECTRIC
+-   Rename the secure share identifier to ENERGY_USAGE
+
+- In the Briefly Describe your listing section, type in a short summary which describes your dataset.
 
 - Under Add consumer accounts area, choose your the consumer account to share with by typing the identifier into the **add consumer account** box. 
 
