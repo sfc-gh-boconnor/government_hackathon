@@ -573,19 +573,20 @@ total_energy_area_changes
 
 ### 3.4 Create a heatmap using H3 using the detailed energy information
 
-- Create a new view using a new **SQL** cell
+- Create a new view using a new **SQL** cell - NB. You will need to modify the select statement for the gas providers - again, same as before, look at the databases area to find exact path name.  (this is within the share)
 
 ```SQL
 
-CREATE OR REPLACE VIEW "Energy by Postcode Detail"
+CREATE OR REPLACE VIEW DATA."Energy by Postcode Detail"
 
 as
 
-SELECT *, 'ELECTRIC' as "Energy Type" FROM ENERGY_USAGE.DATA."Electric Meter by Postcode"
+SELECT *, 'GAS' as "Energy Type" FROM ENERGY_USAGE__GAS.DATA."Gas Meter by Postcode"
 
 UNION 
 
-SELECT *, 'GAS' as "Energy Type" FROM DATA."Gas Meter by Postcode"
+SELECT *, 'ELECTRIC' as "Energy Type" FROM DATA."Electric Meter by Postcode"
+
 
 ```
 - Create a new **python** cell which will forecast the average price of fuel per postcode.  We will also join to the postcode dataset provided by **more metrics**
