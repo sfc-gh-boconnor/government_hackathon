@@ -170,15 +170,17 @@ Download the following files
 
     ![Images](assets/image-6.png)
 
--   Download the following file and add it to the home directory.  This file specifies which packages are needed to run the app.
+-   Download the following file and add it to the home directory.  This file specifies which packages are needed to run the app.  You will not need to specify a folder name in this exercise.
 
     [enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
 
     ![alt text](assets/image-8.png)
 
-- In the Projects area, click on Streamlit
+#### Running the Streamlit app
 
-- You should ses a new streamlit app appear called **Policy Change Simulator**
+- Navigate to the Projects menu
+- Click on Streamlit
+- Click on **Policy Change Simulator**
 
     ![Image](assets/image-7.png)
 
@@ -202,7 +204,7 @@ Spend a few minutes trying out different scenarios before we start doing our own
 
 ## 2 Data Analysis with a Notebook
 
-We will use the built in notebooks to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
+We will use a notebook to do some analysis on the synthetic data.  Before this, go to the market place and search for More Metrics.  We will add Residential postcodes as an additional dataset.  Do not change the name of the database.
 
 - Go to the market place and search for residential postcodes.  Get the data.
 
