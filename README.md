@@ -274,10 +274,20 @@ Some of you will be providers of Electric, others will be providers of gas
 
 >The Gas provider needs to download [**this**](https://assets.publishing.service.gov.uk/media/65b10088160765001118f7bd/Postcode_level_gas_2022.csv)
 
+- Choose Postcode level all domestic meters electricity 2022
+
 >The Electric provider needs to download [**this**](https://assets.publishing.service.gov.uk/media/65b0d1c2f2718c0014fb1be5/Postcode_level_all_meters_electricity_2022.csv)
 
+- Choose postcode level domestic gas 2022
 
-- Once you have downloaded your designated CSV file, switch back to your existing snowflake notebook and within the data pane, click on the 3 dots on the side of the **DATA** schema to Load data
+
+- Once you have downloaded your designated CSV file, switch back to the home page in Snowflake by clicking on the house.
+
+**Ingest the Data**
+
+Click on **Data** and select the database **policy_change_simulator_streamlit**
+
+Select the schema **Data** then on the top right hand corner, navigate and select **Create Table from File**
 
     ![load_data](assets/image-16.png)
 
@@ -300,6 +310,10 @@ After about 5 seconds you should get something like this:
 ![alt text](assets/image-21.png)
 
 -   Press **Done**
+
+**Creating a new Notebook**
+
+
 
 
 -   Add a new **python** cell in the notebook
