@@ -145,7 +145,7 @@ Today we will manually add the files needed to run the app using the snowflake U
 
     ![alt text](assets/image-3.png)
 
-- Click on ** + Files ** to load more files.
+- Click on **+ Files** to load more files.
 
 Download the following files 
 
