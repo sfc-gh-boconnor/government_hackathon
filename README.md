@@ -459,7 +459,11 @@ If you haven't already done so, get the other energy listing data from the priva
 
 > **HINT** You have already done this step before with the initial data share. The new Data share will be in the Private Sharing area.
 
-- Go back to the original notebook and this time add a **SQL** cell.
+- Go back to the Energy Usage notebook 
+
+- Rerun cell 1 and two to ensure we have imported the right libraries. 
+
+- scroll to the bottom add a **SQL** cell.
 
 
 ```sql
@@ -467,14 +471,19 @@ If you haven't already done so, get the other energy listing data from the priva
 CREATE OR REPLACE VIEW "Energy by Postcode Area"
 
 as
-SELECT *, 'ELECTRIC' as "Energy Type" FROM ENERGY_USAGE.DATA."Electric Meter by Postcode Area"
+SELECT *, 'GAS' as "Energy Type" FROM ENERGY_USAGE__GAS.DATA."Gas Meter by Postcode Area"
 
 UNION 
 
-SELECT *, 'GAS' as "Energy Type" FROM DATA."Gas Meter by Postcode Area"
+SELECT *, 'ELECTRIC' as "Energy Type" FROM DATA."Electric Meter by Postcode Area"
 
 ```
+
+- Run the cell.
+
 You have just created a simple view which combines the two datasets together.
+
+>Note - The above sql will fail for the Gas provider - you will need to change the database paths.  The Electric Provider will only need supply the schema and table as the notebook is saved inside the database where the data is situated.   You can see the exact paths by selecting the Databases tab within the left hand pane.
 
 - Add a **python** cell to load the data from the view into a dataframe
 
