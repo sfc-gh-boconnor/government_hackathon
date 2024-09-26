@@ -151,7 +151,9 @@ Download the following files
 
 [pages](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/pages)
 
-- Upload the files to a new directory called pages.  To do this, before uploading the files, type /pages where it says *"Specify the path to an existing folder or create a new one"*
+- Upload the files to a new directory called pages. You can ctrl+click to select multiple files.  before pressing upload, type /pages where it says *"Specify the path to an existing folder or create a new one"*
+
+- press upload
 
 ![alt text](assets/image-5.png)
 
@@ -162,13 +164,13 @@ Download the following files
 
 
 
--   Download the following images and add to a new directory called images
+-   Download the following images and add to a new directory called images.  You will do this in the same way as you did for pages.  This time when you specify the folder, you will type in /images.
 
     [Images](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/images)
 
     ![Images](assets/image-6.png)
 
--   Download the following file and add it to the home directory
+-   Download the following file and add it to the home directory.  This file specifies which packages are needed to run the app.
 
     [enviroment.yml](https://github.com/sfc-gh-boconnor/government_hackathon/tree/main/environment.yml)
 
