@@ -43,12 +43,16 @@ These are the the key aspects in order to ensure you will make the most of the h
 
 Welcome to Snowflake.  Before we can continue with the lab, we will be sharing you a private data share.  in order to do this, we will need the account identifier of you newly created account.
 
+- Log out of Snowflake by clicking on your name at the bottom left hand side of the screen then press **Sign Out**
+
+- Sign back into your newly created account.  This will ensure your account details for sharing purposes are populated.
+
 - Copy your account identifier.   You will be able to access this by clicking on your name at the bottom left hand of the screen which opens a menu.  Within the menu you will need to navigate to account, your newly created trial account which will reveal the details. Press the **copy** button as highlighted in the screenshot below to copy your account identifier to the clipboard.  
 
     ![alt text](assets/image-34.png)
 
 
-- Open up the following google form and supply your account identifier with your full name and organisation
+- Open up the following google form in a new tab and supply your account identifier with your full name and organisation
 
     https://forms.gle/JXF4zSKZP6X26Unr6
 
