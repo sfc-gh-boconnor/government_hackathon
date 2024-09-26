@@ -588,6 +588,7 @@ UNION
 SELECT *, 'ELECTRIC' as "Energy Type" FROM DATA."Electric Meter by Postcode"
 
 
+
 ```
 - Create a new **python** cell which will forecast the average price of fuel per postcode.  We will also join to the postcode dataset provided by **more metrics**
 
