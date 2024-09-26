@@ -381,7 +381,7 @@ meter_data_pcd_area.create_or_replace_view('DATA."Electric Meter by Postcode Are
 
 ```
 
-Once created you will see 2 views appear in the data schema
+Once created you will see 2 views appear in the data schema. You can see this by toggling from **Files** to **Databases** within the left hand window pane.
 
 ![alt text](assets/image-22.png)
 
